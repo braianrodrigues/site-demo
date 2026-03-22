@@ -1,0 +1,148 @@
+<div class="page-wrapper">
+  <div class="card-panel">
+    <div class="header">
+      <div class="title-area">
+        <mat-icon>phone</mat-icon>
+        <div>
+          <h2>Cadastro Telefônico</h2>
+          <p>Gerencie os registros telefônicos cadastrados no sistema.</p>
+        </div>
+      </div>
+
+      <button class="btn-new" mat-flat-button type="button" (click)="novo()">
+        <mat-icon>add</mat-icon>
+        Novo cadastro
+      </button>
+    </div>
+
+    <div class="loading-wrap" *ngIf="loading(); else contentTpl">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Carregando cadastros...</span>
+    </div>
+
+    <ng-template #contentTpl>
+      <div class="table-container">
+        <table class="alvos-table">
+          <thead>
+            <tr>
+              <th>
+                <div class="header-cell">
+                  <span class="header-title">Número</span>
+                  <input
+                    class="header-filter"
+                    [value]="searchNumero()"
+                    (input)="setFilterNumero($any($event.target).value)"
+                    placeholder="Filtrar"
+                  />
+                </div>
+              </th>
+
+              <th>
+                <div class="header-cell">
+                  <span class="header-title">Nome</span>
+                  <input
+                    class="header-filter"
+                    [value]="searchNome()"
+                    (input)="setFilterNome($any($event.target).value)"
+                    placeholder="Filtrar"
+                  />
+                </div>
+              </th>
+
+              <th>
+                <div class="header-cell">
+                  <span class="header-title">Operadora</span>
+                  <input
+                    class="header-filter"
+                    [value]="searchOperadora()"
+                    (input)="setFilterOperadora($any($event.target).value)"
+                    placeholder="Filtrar"
+                  />
+                </div>
+              </th>
+
+              <th>
+                <div class="header-cell">
+                  <span class="header-title">Operação</span>
+                  <input
+                    class="header-filter"
+                    [value]="searchOperacao()"
+                    (input)="setFilterOperacao($any($event.target).value)"
+                    placeholder="Filtrar"
+                  />
+                </div>
+              </th>
+
+              <th>
+                <div class="header-cell">
+                  <span class="header-title">Prorrogação</span>
+                  <input
+                    class="header-filter"
+                    [value]="searchProrrogacao()"
+                    (input)="setFilterProrrogacao($any($event.target).value)"
+                    placeholder="Filtrar"
+                  />
+                </div>
+              </th>
+
+              <th class="actions-header">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of items()">
+              <td>{{ item.numeroTelefone || '-' }}</td>
+              <td>{{ item.nome || '-' }}</td>
+              <td>{{ item.operadora || '-' }}</td>
+              <td>{{ item.operacaoNome || '-' }}</td>
+              <td>{{ formatProrrogacaoDescricao(item.prorrogacaoDescricao) }}</td>
+              <td>
+                <div class="actions">
+                  <button
+                    class="btn-icon btn-view"
+                    type="button"
+                    (click)="visualizar(item.id)"
+                    matTooltip="Visualizar"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+
+                  <button
+                    class="btn-icon btn-edit"
+                    type="button"
+                    (click)="editar(item.id)"
+                    matTooltip="Editar"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button
+                    class="btn-icon btn-delete"
+                    type="button"
+                    (click)="excluir(item.id)"
+                    matTooltip="Excluir"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            
+            <tr *ngIf="items().length === 0" class="no-data-row">
+              <td colspan="6" class="empty-row">
+                <div class="empty-row-content">
+                  Nenhum registro encontrado
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        <div>Total de registros: <strong>{{ items().length }}</strong></div>
+        <div class="nav"></div>
+      </div>
+    </ng-template>
+  </div>
+</div>

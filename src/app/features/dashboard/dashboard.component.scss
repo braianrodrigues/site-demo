@@ -1,0 +1,73 @@
+:host { display:block; }
+.dashboard { min-height: calc(100vh - 64px); }
+
+.header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin: 8px 0 16px;
+}
+h2{
+  margin:0;
+  color: var(--azul-topo);
+  font-weight: 700;
+}
+
+/* =========================
+   KPIs
+   ========================= */
+.kpi-row{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap:16px;
+  margin-bottom: 24px;
+}
+.kpi-card{
+  background: var(--card);
+  border:1px solid var(--borda);
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  height: 120px;
+  padding: 14px 18px;
+  display:flex; flex-direction:column; justify-content:center;
+  gap: 6px;
+}
+.kpi-title{ font-size: 13px; color: var(--texto-secundario); }
+.value{ font-size: 32px; font-weight: 800; color: #2563EB; }
+.chip{
+  width: max-content; font-size: 12px; padding: 3px 8px; border-radius: 999px;
+  background: #E0E7FF; color: #1E3A8A; border: 1px solid rgba(37,99,235,.15);
+}
+.chip.warn{ background:#FFE4E6; color:#9F1239; border-color: rgba(244,63,94,.2); }
+
+/* =========================
+   Seções Power BI 
+   ========================= */
+.section-title{ font-size:16px; font-weight:600; color: var(--azul-topo); margin: 8px 0 10px; }
+.card-grid{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 20px;
+}
+.pbi-card{
+  min-height:320px; background:var(--card); border:1px solid var(--borda);
+  border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.06);
+}
+.pbi-card.wide{ grid-column: 1 / -1; min-height: 420px; }
+
+/* =========================
+   placeholders 
+   ========================= */
+.placeholder{
+  height:100%; border:2px dashed var(--borda); border-radius:10px; background:#fafbfc;
+  color:var(--texto-secundario); display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:8px; text-align:center; transition:border-color .2s ease;
+}
+.placeholder:hover{ border-color:#2563EB; }
+.placeholder mat-icon{ font-size:46px; opacity:.7; color:#2563EB; }
+.placeholder.big{ height:360px; }
+
+/* =========================
+   botão atualizar
+   ========================= */
+.refresh-btn{
+  border-color:#2563EB !important; color:#2563EB !important; font-weight:600;
+}
+.refresh-btn:hover{ background:#eff6ff; }

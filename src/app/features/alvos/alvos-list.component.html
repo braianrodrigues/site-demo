@@ -1,0 +1,191 @@
+<div class="page-wrapper">
+  <div class="card-panel">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="title-area">
+        <mat-icon>groups</mat-icon>
+        <div class="texts">
+          <h2>Alvos</h2>
+          <p>Consulta e gerenciamento de cadastros.</p>
+        </div>
+      </div>
+
+      <button mat-flat-button color="primary" class="btn-new" (click)="novo()">
+        <mat-icon>add</mat-icon>
+        Novo alvo
+      </button>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-container">
+      <table mat-table [dataSource]="filteredRows()" class="alvos-table">
+
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">ID</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterId" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.id }}</td>
+        </ng-container>
+
+        <!-- FOTO -->
+        <ng-container matColumnDef="foto">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell foto-header-cell">
+              <span class="header-title">Foto</span>
+            </div>
+          </th>
+
+          <td mat-cell *matCellDef="let r">
+            <div class="foto-cell">
+              <div class="foto-wrapper" *ngIf="r.fotoUrl; else semFoto">
+                <img
+                  [src]="r.fotoUrl"
+                  [alt]="'Foto de ' + r.nome"
+                  class="alvo-thumb"
+                  loading="lazy"
+                />
+
+                <div class="foto-preview">
+                  <img [src]="r.fotoUrl" [alt]="'Foto ampliada de ' + r.nome" />
+                </div>
+              </div>
+
+              <ng-template #semFoto>
+                <div class="alvo-thumb alvo-thumb-placeholder">
+                  <mat-icon>person</mat-icon>
+                </div>
+              </ng-template>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Nome -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Nome</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterNome" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r" [title]="r.nome">{{ r.nome }}</td>
+        </ng-container>
+
+        <!-- Vulgo -->
+        <ng-container matColumnDef="vulgo">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Vulgo</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterVulgo" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r" [title]="r.vulgo || '—'">{{ r.vulgo || '—' }}</td>
+        </ng-container>
+
+        <!-- CPF -->
+        <ng-container matColumnDef="cpf">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">CPF</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterCpf" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ formatCpf(r.cpf) }}</td>
+        </ng-container>
+
+        <!-- Cidade -->
+        <ng-container matColumnDef="cidade">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Cidade</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterCidade" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.cidade || '—' }}</td>
+        </ng-container>
+
+        <!-- UF -->
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">UF</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterUf" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.estado || '—' }}</td>
+        </ng-container>
+
+        <!-- Ações -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-header">
+            <span class="header-title">Ações</span>
+          </th>
+          <td mat-cell *matCellDef="let r">
+            <div class="actions">
+              <button
+                mat-icon-button
+                class="btn-icon btn-view"
+                matTooltip="Visualizar"
+                (click)="visualizar(r)"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+
+              <button
+                mat-icon-button
+                class="btn-icon btn-edit"
+                matTooltip="Editar"
+                (click)="editar(r)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button
+                *ngIf="canDelete()"
+                mat-icon-button
+                class="btn-icon btn-delete"
+                matTooltip="Excluir"
+                (click)="excluir(r)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row no-data-row" *matNoDataRow>
+          <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+            <div class="empty-row-content">
+              Nenhum registro encontrado
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Página {{ page() + 1 }} • Total: {{ total() }}</span>
+
+      <div class="page-size">
+        <span>Itens:</span>
+        <a (click)="size.set(10); load()">10</a>
+        <a (click)="size.set(25); load()">25</a>
+        <a (click)="size.set(50); load()">50</a>
+      </div>
+
+      <div class="nav">
+        <button mat-stroked-button (click)="goPrev()">Anterior</button>
+        <button mat-stroked-button (click)="goNext()">Próxima</button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,173 @@
+<div class="perfil-page">
+  <mat-card class="perfil-card">
+    <div class="card-header">
+      <div class="title-wrap">
+        <div class="eyebrow">Minha conta</div>
+        <h1 class="page-title">Perfil do Usuário</h1>
+        <p class="page-subtitle">
+          Atualize seus dados pessoais e altere sua senha com segurança.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <button mat-stroked-button type="button" class="btn-back" (click)="back()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          class="btn-save"
+          (click)="saveProfile()"
+          [disabled]="loading() || savingProfile()"
+        >
+          <mat-icon>save</mat-icon>
+          {{ savingProfile() ? 'Salvando...' : 'Salvar perfil' }}
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="loading-state" *ngIf="loading(); else contentTpl">
+      <mat-spinner diameter="42"></mat-spinner>
+      <span>Carregando perfil...</span>
+    </div>
+
+    <ng-template #contentTpl>
+      <div class="card-body">
+        <section class="profile-section">
+          <div class="section-header">
+            <div>
+              <h2>Dados do usuário</h2>
+              <p>Esses dados identificam sua conta e suas informações pessoais.</p>
+            </div>
+          </div>
+
+          <form class="form-grid" [formGroup]="profileForm">
+            <mat-form-field appearance="outline">
+              <mat-label>Usuário</mat-label>
+              <input matInput formControlName="username" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>E-mail</mat-label>
+              <input matInput formControlName="email" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Perfil</mat-label>
+              <input matInput formControlName="role" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Área de acesso</mat-label>
+              <input matInput formControlName="areaAcesso" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="span-2">
+              <mat-label>Nome completo</mat-label>
+              <input matInput formControlName="fullName" />
+              <mat-error *ngIf="hasError('profile', 'fullName', 'required')">
+                O nome é obrigatório.
+              </mat-error>
+              <mat-error *ngIf="hasError('profile', 'fullName', 'maxlength')">
+                O nome deve ter no máximo 120 caracteres.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>RE</mat-label>
+              <input matInput formControlName="re" />
+              <mat-error *ngIf="hasError('profile', 're', 'maxlength')">
+                O RE deve ter no máximo 20 caracteres.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telefone</mat-label>
+              <input matInput formControlName="telefone" />
+              <mat-error *ngIf="hasError('profile', 'telefone', 'maxlength')">
+                O telefone deve ter no máximo 30 caracteres.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data de nascimento</mat-label>
+              <input matInput type="date" formControlName="dataNascimento" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="span-3">
+              <mat-label>Endereço</mat-label>
+              <input matInput formControlName="endereco" />
+              <mat-error *ngIf="hasError('profile', 'endereco', 'maxlength')">
+                O endereço deve ter no máximo 255 caracteres.
+              </mat-error>
+            </mat-form-field>
+          </form>
+        </section>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <section class="password-section">
+          <div class="section-header">
+            <div>
+              <h2>Alterar senha</h2>
+              <p>
+                Informe sua senha atual e defina uma nova senha para sua conta.
+              </p>
+            </div>
+          </div>
+
+          <form class="form-grid password-grid" [formGroup]="passwordForm">
+            <mat-form-field appearance="outline">
+              <mat-label>Senha atual</mat-label>
+              <input matInput type="password" formControlName="currentPassword" />
+              <mat-error *ngIf="hasError('password', 'currentPassword', 'required')">
+                A senha atual é obrigatória.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Nova senha</mat-label>
+              <input matInput type="password" formControlName="newPassword" />
+              <mat-error *ngIf="hasError('password', 'newPassword', 'required')">
+                A nova senha é obrigatória.
+              </mat-error>
+              <mat-error *ngIf="hasError('password', 'newPassword', 'minlength')">
+                A nova senha deve ter no mínimo 6 caracteres.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Confirmar nova senha</mat-label>
+              <input matInput type="password" formControlName="confirmNewPassword" />
+              <mat-error *ngIf="hasError('password', 'confirmNewPassword', 'required')">
+                A confirmação da nova senha é obrigatória.
+              </mat-error>
+              <mat-error *ngIf="passwordMismatch()">
+                A confirmação da nova senha não confere.
+              </mat-error>
+            </mat-form-field>
+          </form>
+
+          <div class="password-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              class="btn-password"
+              (click)="savePassword()"
+              [disabled]="savingPassword()"
+            >
+              <mat-icon>lock_reset</mat-icon>
+              {{ savingPassword() ? 'Alterando...' : 'Alterar senha' }}
+            </button>
+          </div>
+        </section>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

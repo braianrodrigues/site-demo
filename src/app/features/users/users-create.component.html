@@ -1,0 +1,225 @@
+<div class="page-wrapper">
+  <div class="card-panel">
+
+    <div class="header">
+      <div class="title-area">
+        <mat-icon>supervisor_account</mat-icon>
+        <div class="texts">
+          <h2>Usuários</h2>
+          <p>Cadastro, permissões e gerenciamento de acessos ao sistema.</p>
+        </div>
+      </div>
+    </div>
+
+    <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+
+    <div class="content-grid">
+
+      <form class="form users-form" [formGroup]="form" (ngSubmit)="save()">
+
+        <!-- DADOS DO USUÁRIO -->
+        <section class="section-card">
+          <h3 class="section-title">Dados do usuário</h3>
+          <p class="section-subtitle">Informe os dados básicos de identificação e login.</p>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome completo *</mat-label>
+              <input matInput formControlName="fullName" autocomplete="off" />
+              <mat-error *ngIf="f['fullName'].touched && f['fullName'].hasError('required')">
+                Campo obrigatório
+              </mat-error>
+              <mat-error *ngIf="f['fullName'].touched && f['fullName'].hasError('minlength')">
+                Mínimo de 3 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Usuário *</mat-label>
+              <input matInput formControlName="username" autocomplete="off" />
+              <mat-hint>Somente letras, números, ponto, hífen e underline</mat-hint>
+              <mat-error *ngIf="f['username'].touched && f['username'].hasError('required')">
+                Campo obrigatório
+              </mat-error>
+              <mat-error *ngIf="f['username'].touched && f['username'].hasError('minlength')">
+                Mínimo de 3 caracteres
+              </mat-error>
+              <mat-error *ngIf="f['username'].touched && f['username'].hasError('pattern')">
+                Use apenas letras, números, ponto, hífen e underline
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" autocomplete="off" />
+              <mat-error *ngIf="f['email'].touched && f['email'].hasError('email')">
+                Email inválido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telefone</mat-label>
+              <input matInput formControlName="telefone" autocomplete="off" />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Data de nascimento</mat-label>
+              <input matInput type="date" formControlName="dataNascimento" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Endereço</mat-label>
+              <input matInput formControlName="endereco" autocomplete="off" />
+            </mat-form-field>
+          </div>
+        </section>
+
+        <!-- PERFIL E ACESSO -->
+        <section class="section-card">
+          <h3 class="section-title">Permissões de acesso</h3>
+          <p class="section-subtitle">
+            Defina o perfil, a área e o comportamento inicial do novo usuário.
+          </p>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Perfil *</mat-label>
+              <mat-select formControlName="role">
+                <mat-option *ngFor="let role of roleOptions" [value]="role">
+                  {{ role }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="f['role'].touched && f['role'].hasError('required')">
+                Campo obrigatório
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Área de acesso *</mat-label>
+              <mat-select formControlName="areaAcesso">
+                <mat-option *ngFor="let area of areaOptions" [value]="area">
+                  {{ area }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="f['areaAcesso'].touched && f['areaAcesso'].hasError('required')">
+                Campo obrigatório
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="access-info-box">
+            <div class="info-icon">
+              <mat-icon>lock_reset</mat-icon>
+            </div>
+
+            <div class="info-content">
+              <div class="info-title">Senha inicial automática</div>
+              <div class="info-text">
+                O sistema criará o usuário com a senha padrão
+                <strong>123456</strong>. No primeiro acesso, ele será
+                obrigado a cadastrar uma nova senha.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button type="button" mat-stroked-button color="primary" (click)="clear()">
+            Limpar
+          </button>
+
+          <button
+            type="submit"
+            mat-flat-button
+            color="primary"
+            class="btn-save"
+            [disabled]="form.invalid || loading() || !isGestor()">
+            <mat-icon>save</mat-icon>
+            Salvar
+          </button>
+        </div>
+      </form>
+
+      <section class="users-panel">
+
+        <div class="users-header">
+          <div>
+            <h3>Usuários</h3>
+            <p class="users-subtitle">Resumo e atalhos de gerenciamento.</p>
+          </div>
+
+          <span class="badge-count">
+            {{ totalUsers() }}
+            {{ totalUsers() === 1 ? 'usuário' : 'usuários' }}
+          </span>
+        </div>
+
+        <div class="panel-block">
+          <div class="stat-line">
+            <span class="label">Total cadastrado</span>
+            <strong>{{ totalUsers() }}</strong>
+          </div>
+
+          <div class="stat-line">
+            <span class="label">Perfil padrão</span>
+            <strong>USUARIO_NIVEL_II</strong>
+          </div>
+
+          <div class="stat-line">
+            <span class="label">Senha inicial</span>
+            <strong>123456</strong>
+          </div>
+        </div>
+
+        <div class="panel-block">
+          <div class="block-title">
+            <mat-icon>bolt</mat-icon>
+            <span>Atalhos</span>
+          </div>
+
+          <div class="quick-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              class="btn-full-list"
+              routerLink="lista">
+              <mat-icon>list</mat-icon>
+              Lista completa
+            </button>
+
+            <button
+              mat-stroked-button
+              color="primary"
+              class="btn-secondary"
+              type="button"
+              (click)="clear()">
+              <mat-icon>restart_alt</mat-icon>
+              Limpar formulário
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-block">
+          <div class="block-title">
+            <mat-icon>shield</mat-icon>
+            <span>Boas práticas</span>
+          </div>
+
+          <ul class="tips">
+            <li>Somente o <strong>GESTOR</strong> pode criar usuários.</li>
+            <li>Use <strong>USUARIO_NIVEL_II</strong> como perfil padrão.</li>
+            <li>A senha inicial padrão será <strong>123456</strong>.</li>
+            <li>O usuário será obrigado a trocar a senha no <strong>primeiro acesso</strong>.</li>
+            <li>Defina a <strong>área de acesso</strong> corretamente para separar Operacional e Administrativo.</li>
+          </ul>
+        </div>
+
+      </section>
+    </div>
+
+  </div>
+</div>

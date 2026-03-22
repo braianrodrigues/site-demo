@@ -1,0 +1,44 @@
+<div class="dashboard">
+  <!-- Cabeçalho -->
+  <div class="header">
+    <h2>Indicadores Operacionais</h2>
+    <button mat-stroked-button class="refresh-btn" (click)="refresh()">
+      <mat-icon>refresh</mat-icon>&nbsp;Atualizar
+    </button>
+  </div>
+
+  <!-- KPIs (usando o array kpis do TS) -->
+  <section class="kpi-row">
+    <mat-card class="kpi-card" *ngFor="let k of kpis">
+      <div class="kpi-title">{{ k.title }}</div>
+      <div class="value">{{ k.value }}</div>
+      <div class="chip" [class.warn]="k.chip === 'Crítico'">{{ k.chip }}</div>
+    </mat-card>
+  </section>
+
+  <!-- Power BI placeholders -->
+  <div class="section-title">Produtividade (Power BI)</div>
+  <div class="card-grid">
+    <mat-card class="pbi-card">
+      <div class="placeholder">
+        <mat-icon>insert_chart_outlined</mat-icon>
+        <span>Em breve: relatório de Produtividade</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="pbi-card">
+      <div class="placeholder">
+        <mat-icon>stacked_bar_chart</mat-icon>
+        <span>Em breve: relatório de Apreensões</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="section-title">Mapa de Calor de Ocorrências (Power BI)</div>
+  <mat-card class="pbi-card wide">
+    <div class="placeholder big">
+      <mat-icon>map</mat-icon>
+      <span>Em breve: mapa de calor</span>
+    </div>
+  </mat-card>
+</div>

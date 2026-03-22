@@ -1,0 +1,568 @@
+:host {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* =========================
+   Base / Tipografia
+   ========================= */
+.page {
+  padding: 16px 24px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #0f172a;
+  overflow: visible;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+/* =========================
+   Container principal
+   ========================= */
+.card {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 18px 46px rgba(16, 24, 40, 0.12);
+  overflow: hidden;
+}
+
+/* =========================
+   Header
+   ========================= */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #475569;
+      max-width: 980px;
+      line-height: 1.25rem;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    white-space: nowrap;
+  }
+}
+
+/* =========================
+   Conteúdo
+   ========================= */
+.card-body {
+  padding: 20px 22px;
+  overflow: visible;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* =========================
+   Grid principal
+   ========================= */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 20px;
+  align-items: flex-start;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+/* =========================
+   Panels
+   ========================= */
+.section-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.08);
+}
+
+.left-panel {
+  position: sticky;
+  top: 14px;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  margin: 0 0 4px 0;
+  color: #0f172a;
+}
+
+.section-subtitle {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #475569;
+  margin: 0;
+  line-height: 1.3rem;
+}
+
+.divider-space {
+  margin: 18px 0;
+}
+
+/* =========================
+   Lista de operações
+   ========================= */
+.operacoes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.operacao-item {
+  width: 100%;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &:hover {
+    border-color: rgba(11, 87, 208, 0.32);
+    box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+  }
+
+  &.active {
+    border-color: rgba(11, 87, 208, 0.65);
+    background: rgba(11, 87, 208, 0.04);
+    box-shadow: 0 10px 24px rgba(11, 87, 208, 0.12);
+  }
+}
+
+.operacao-item-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.operacao-nome {
+  font-size: 13.75px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.operacao-item-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* =========================
+   Status / destaque
+   ========================= */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  background: rgba(22, 101, 52, 0.10);
+  color: #166534;
+  width: fit-content;
+
+  &.inativo {
+    background: rgba(185, 28, 28, 0.10);
+    color: #b91c1c;
+  }
+}
+
+.selected-operacao-box {
+  margin: 2px 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(11, 87, 208, 0.06);
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.field-gap-top {
+  margin-top: 12px;
+}
+
+/* =========================
+   Footer actions
+   ========================= */
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+/* =========================
+   Tabela de prorrogações
+   ========================= */
+.table-container {
+  margin-top: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(209, 213, 219, 0.9);
+  overflow: hidden;
+  width: 100%;
+}
+
+.prorrogacoes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prorrogacoes-table thead th {
+  background: #0067ff;
+  color: #ffffff;
+  padding: 10px 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.prorrogacoes-table thead th:last-child {
+  border-right: none;
+}
+
+.prorrogacoes-table tbody td {
+  font-size: 0.9rem;
+  color: #111827;
+  padding: 10px 12px;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.prorrogacoes-table tbody td:last-child {
+  border-right: none;
+}
+
+.prorrogacoes-table tbody tr:nth-child(even) td {
+  background: #f3f6ff;
+}
+
+.prorrogacoes-table tbody tr:nth-child(odd) td {
+  background: #ffffff;
+}
+
+.prorrogacoes-table tbody tr:hover td {
+  background: #e5f0ff;
+}
+
+.prorrogacoes-table tbody td:nth-child(2),
+.prorrogacoes-table tbody td:nth-child(3),
+.prorrogacoes-table tbody td:nth-child(4) {
+  text-align: center;
+}
+
+.actions-header {
+  text-align: center;
+}
+
+/* =========================
+   Ações
+   ========================= */
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn-icon mat-icon {
+  font-size: 18px;
+}
+
+.btn-edit {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.btn-edit mat-icon {
+  color: #1d4ed8;
+}
+
+.btn-edit:hover {
+  background: rgba(37, 99, 235, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-delete mat-icon {
+  color: #dc2626;
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+}
+
+/* =========================
+   Loading / Empty
+   ========================= */
+.loading-wrap {
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.empty-state {
+  min-height: 120px;
+  border: 1px dashed rgba(15, 23, 42, 0.18);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+
+  &.warning {
+    justify-content: flex-start;
+    min-height: auto;
+  }
+}
+
+/* =========================================================
+   Angular Material MDC (OUTLINE) - padrão SiteAR
+   ========================================================= */
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mdc-text-field {
+  border-radius: 14px !important;
+  background: #fff;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-infix {
+  min-height: 48px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+:host ::ng-deep .mdc-notched-outline__leading,
+:host ::ng-deep .mdc-notched-outline__notch,
+:host ::ng-deep .mdc-notched-outline__trailing {
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: rgba(15, 23, 42, 0.32) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: rgba(11, 87, 208, 0.85) !important;
+}
+
+:host ::ng-deep .mdc-notched-outline__leading {
+  border-right: 0 !important;
+}
+
+:host ::ng-deep .mdc-notched-outline__notch {
+  border-left: 0 !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+
+:host ::ng-deep .mat-mdc-floating-label {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12px;
+  color: rgba(15, 23, 42, 0.72) !important;
+  background: #fff !important;
+  padding: 0 6px !important;
+  border-radius: 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+:host ::ng-deep .mat-mdc-input-element {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1px;
+  color: #0f172a !important;
+}
+
+/* =========================
+   Snackbars
+   ========================= */
+:host ::ng-deep .snackbar-success {
+  --mdc-snackbar-container-color: #166534;
+  --mat-snack-bar-button-color: #ffffff;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}
+
+:host ::ng-deep .snackbar-error {
+  --mdc-snackbar-container-color: #b91c1c;
+  --mat-snack-bar-button-color: #ffffff;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}
+
+/* =========================
+   Responsivo
+   ========================= */
+@media (max-width: 1200px) {
+  .left-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .prorrogacoes-table {
+    min-width: 700px;
+  }
+}
+
+@media (max-width: 620px) {
+  .page {
+    padding: 12px;
+  }
+
+  .card-header,
+  .card-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .header-actions,
+  .footer-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .header-actions button,
+  .footer-actions button {
+    width: 100%;
+  }
+}
+

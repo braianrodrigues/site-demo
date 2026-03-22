@@ -1,0 +1,195 @@
+<!-- src/app/features/produtividade/produtividade-list.component.html -->
+<div class="page-wrapper">
+  <div class="card-panel">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="title-area">
+        <mat-icon>assignment</mat-icon>
+        <div class="texts">
+          <h2>Produtividades</h2>
+          <p>Consulta e gerenciamento de registros.</p>
+        </div>
+      </div>
+
+      <!-- USER e ADMIN podem criar -->
+      <button mat-flat-button color="primary" class="btn-new" (click)="novo()">
+        <mat-icon>add</mat-icon>
+        Nova produtividade
+      </button>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-container">
+      <table mat-table [dataSource]="filteredRows()" class="alvos-table">
+        <colgroup>
+          <col style="width: 70px">
+          <col style="width: 140px">
+          <col style="width: 190px">
+          <col style="width: 170px">
+          <col style="width: 220px">
+          <col style="width: 220px">
+          <col style="width: 120px">
+          <col style="width: 120px">
+          <col style="width: 140px">
+        </colgroup>
+
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">ID</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterId" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.id }}</td>
+        </ng-container>
+
+        <!-- Data -->
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Data</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterData" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ formatDateBR(r.data) }}</td>
+        </ng-container>
+
+        <!-- Natureza -->
+        <ng-container matColumnDef="natureza">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Natureza</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterNatureza" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ formatNatureza(r.natureza) || '—' }}</td>
+        </ng-container>
+
+        <!-- Equipe -->
+        <ng-container matColumnDef="equipe">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Equipe</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterEquipe" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.equipe || '—' }}</td>
+        </ng-container>
+
+        <!-- Envolvido -->
+        <ng-container matColumnDef="envolvido">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Envolvido</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterEnvolvido" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.primeiroEnvolvidoNome || '—' }}</td>
+        </ng-container>
+
+        <!-- Cadastrado por -->
+        <ng-container matColumnDef="cadastradoPor">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">Cadastrado por</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterCadastradoPor" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.cadastradoPorNome || '—' }}</td>
+        </ng-container>
+
+        <!-- BOPM -->
+        <ng-container matColumnDef="bopm">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">BOPM</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterBopm" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.bopm || '—' }}</td>
+        </ng-container>
+
+        <!-- BOPC -->
+        <ng-container matColumnDef="bopc">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="header-cell">
+              <span class="header-title">BOPC</span>
+              <input class="header-filter" type="text" placeholder="Filtro" [formControl]="filterBopc" />
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let r">{{ r.bopc || '—' }}</td>
+        </ng-container>
+
+        <!-- Ações -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-header">
+            <span class="header-title">Ações</span>
+          </th>
+
+          <td mat-cell *matCellDef="let r">
+            <div class="actions">
+              <button
+                mat-icon-button
+                class="btn-icon btn-view"
+                matTooltip="Visualizar"
+                (click)="visualizar(r)"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+
+              <button
+                mat-icon-button
+                class="btn-icon btn-edit"
+                matTooltip="Editar"
+                (click)="editar(r)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button
+                *ngIf="canDelete()"
+                mat-icon-button
+                class="btn-icon btn-delete"
+                matTooltip="Excluir"
+                (click)="excluir(r)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row no-data-row" *matNoDataRow>
+          <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+            <div class="empty-row-content">
+              Nenhum registro encontrado
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Página {{ page() + 1 }} • Total: {{ total() }}</span>
+
+      <div class="page-size">
+        <span>Itens:</span>
+        <a (click)="size.set(10); load()">10</a>
+        <a (click)="size.set(25); load()">25</a>
+        <a (click)="size.set(50); load()">50</a>
+      </div>
+
+      <div class="nav">
+        <button mat-stroked-button (click)="goPrev()">Anterior</button>
+        <button mat-stroked-button (click)="goNext()">Próxima</button>
+      </div>
+    </div>
+
+  </div>
+</div>

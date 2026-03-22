@@ -1,0 +1,131 @@
+<div class="page-wrapper">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-grid"></div>
+
+  <mat-card class="card">
+    <div class="header">
+      <div class="icon-wrap">
+        <mat-icon>lock_reset</mat-icon>
+      </div>
+
+      <div class="header-text">
+        <span class="eyebrow">SEGURANÇA DA CONTA</span>
+        <h2>Primeiro acesso</h2>
+        <p>
+          Para continuar no sistema, defina uma nova senha pessoal.
+          Essa atualização é obrigatória e será feita apenas uma vez.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <mat-icon>info</mat-icon>
+      <div>
+        Sua conta foi criada com uma senha temporária padrão.
+        Escolha agora uma senha segura para concluir o acesso.
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()" class="form">
+      <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="premium-field">
+        <mat-label>Nova senha</mat-label>
+        <input
+          matInput
+          [type]="hideSenha() ? 'password' : 'text'"
+          formControlName="novaSenha"
+          autocomplete="new-password" />
+
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hideSenha.set(!hideSenha())">
+          <mat-icon>{{ hideSenha() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+
+        <mat-error *ngIf="f['novaSenha'].touched && f['novaSenha'].hasError('required')">
+          Informe a nova senha
+        </mat-error>
+
+        <mat-error *ngIf="f['novaSenha'].touched && f['novaSenha'].hasError('minlength')">
+          Mínimo de 6 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <div class="password-strength">
+        <div class="strength-head">
+          <span>Força da senha</span>
+          <strong class="strength-label" [ngClass]="strengthClass()">
+            {{ strengthLabel() }}
+          </strong>
+        </div>
+
+        <div class="strength-bar">
+          <div class="strength-fill" [ngClass]="strengthClass()" [style.width.%]="strength()"></div>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic" class="premium-field">
+        <mat-label>Confirmar senha</mat-label>
+        <input
+          matInput
+          [type]="hideConfirmacao() ? 'password' : 'text'"
+          formControlName="confirmarSenha"
+          autocomplete="new-password" />
+
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hideConfirmacao.set(!hideConfirmacao())">
+          <mat-icon>{{ hideConfirmacao() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+
+        <mat-error *ngIf="f['confirmarSenha'].touched && f['confirmarSenha'].hasError('required')">
+          Confirme a nova senha
+        </mat-error>
+
+        <mat-error *ngIf="f['confirmarSenha'].touched && f['confirmarSenha'].hasError('minlength')">
+          Mínimo de 6 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <div class="match-box" *ngIf="showMatchState()" [class.ok-box]="passwordsMatch()" [class.fail-box]="!passwordsMatch()">
+        <mat-icon [class.ok]="passwordsMatch()" [class.fail]="!passwordsMatch()">
+          {{ passwordsMatch() ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+        <span [class.ok]="passwordsMatch()" [class.fail]="!passwordsMatch()">
+          {{ passwordsMatch() ? 'As senhas coincidem.' : 'As senhas ainda não coincidem.' }}
+        </span>
+      </div>
+
+      <div class="tips-box">
+        <div class="tips-title">Recomendação de segurança</div>
+        <ul>
+          <li>Use pelo menos 6 caracteres</li>
+          <li>Combine letras maiúsculas, minúsculas e números</li>
+          <li>Evite nome, matrícula, usuário ou datas conhecidas</li>
+          <li>Não reutilize a senha temporária</li>
+        </ul>
+      </div>
+
+      <div class="error" *ngIf="error()">
+        <mat-icon>error</mat-icon>
+        <span>{{ error() }}</span>
+      </div>
+
+      <div class="actions">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="btn-save"
+          [disabled]="loading()">
+          <mat-icon>save</mat-icon>
+          {{ loading() ? 'Salvando...' : 'Salvar nova senha' }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

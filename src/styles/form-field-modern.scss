@@ -1,0 +1,112 @@
+/* ============================================================
+   CAMPOS MODERNOS GLOBAIS
+   Use: <mat-form-field class="app-field-modern" appearance="outline">
+   ============================================================ */
+
+.app-field-modern.mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Remove a borda "Angular padrão" do outline */
+.app-field-modern .mdc-notched-outline__leading,
+.app-field-modern .mdc-notched-outline__trailing,
+.app-field-modern .mdc-notched-outline__notch {
+  border: none !important;
+}
+
+/* Wrapper customizado – substitui o outline padrão */
+.app-field-modern .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+  position: relative;
+  border-radius: 18px !important;
+  background: radial-gradient(circle at top left, #f9fafb 0, #ffffff 60%);
+  border: 1px solid #e5e7eb !important;
+  box-shadow:
+    0 6px 16px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
+}
+
+/* Hover – leve destaque */
+.app-field-modern
+  .mat-mdc-text-field-wrapper.mdc-text-field--outlined:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow:
+    0 10px 26px rgba(15, 23, 42, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Foco – glow azul moderno */
+.app-field-modern
+  .mat-mdc-text-field-wrapper.mdc-text-field--outlined.mdc-text-field--focused {
+  border-color: #2563eb !important;
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.25),
+    0 14px 30px rgba(37, 99, 235, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-1px);
+}
+
+/* Altura do campo + padding interno */
+.app-field-modern .mat-mdc-form-field-infix {
+  min-height: 56px;
+  padding-top: 14px;
+  padding-bottom: 12px;
+}
+
+/* LABEL */
+.app-field-modern .mat-mdc-floating-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #4b5563;
+  background: #ffffff;
+  padding: 0 4px;
+  line-height: 1.1;
+}
+
+/* Label focada */
+.app-field-modern
+  .mdc-text-field--focused
+  .mat-mdc-floating-label {
+  color: #2563eb !important;
+}
+
+/* Texto do input */
+.app-field-modern .mat-mdc-input-element {
+  font-size: 0.95rem;
+  color: #0f172a !important;
+  letter-spacing: 0.2px;
+}
+
+/* Hint */
+.app-field-modern .mat-mdc-hint {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Ícone de olho / suffix */
+.app-field-modern .mat-mdc-form-field-icon-suffix button {
+  width: 36px;
+  height: 36px;
+}
+
+/* Desabilitado */
+.app-field-modern
+  .mat-mdc-text-field-wrapper.mdc-text-field--disabled {
+  background: #f3f4f6 !important;
+  border-color: #e5e7eb !important;
+  box-shadow: none !important;
+}
+
+/* Select (Papel) alinhado com inputs */
+.app-field-modern .mat-mdc-select-value {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+/* Espaço da área de erro/hint mais enxuto */
+.app-field-modern .mat-mdc-form-field-subscript-wrapper {
+  margin-top: 2px;
+}

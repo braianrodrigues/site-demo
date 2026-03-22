@@ -1,0 +1,401 @@
+/* src/app/features/produtividade/produtividade-list.component.scss */
+
+/* ============================================================
+   LAYOUT GERAL
+   ============================================================ */
+.page-wrapper {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  background: #f3f6ff;
+}
+
+.card-panel {
+  width: 100%;
+  max-width: 1700px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 20px 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title-area mat-icon {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0067ff, #00c853);
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-area h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #020617;
+}
+
+.title-area p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #6b7280;
+}
+
+/* BOTÃO NOVO */
+.btn-new {
+  border-radius: 999px !important;
+  padding: 8px 22px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  background: linear-gradient(135deg, #0067ff, #00b4ff) !important;
+  color: #ffffff !important;
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.55) !important;
+
+  mat-icon {
+    margin-right: 6px;
+  }
+}
+
+/* ============================================================
+   TABELA
+   ============================================================ */
+.table-container {
+  margin-top: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(209, 213, 219, 0.9);
+  overflow: hidden;
+  width: 100%;
+}
+
+.alvos-table {
+  width: 100%;
+}
+
+/* Cabeçalho */
+.alvos-table .mat-mdc-header-cell {
+  background: #0067ff;
+  color: #ffffff;
+  padding: 6px 10px 8px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Células */
+.alvos-table .mat-mdc-cell {
+  font-size: 0.9rem;
+  color: #111827;
+  padding: 10px 12px;
+}
+
+/* Zebra */
+.alvos-table .mat-mdc-row:nth-child(even) .mat-mdc-cell {
+  background: #f3f6ff;
+}
+
+.alvos-table .mat-mdc-row:nth-child(odd) .mat-mdc-cell {
+  background: #ffffff;
+}
+
+.alvos-table .mat-mdc-row:hover .mat-mdc-cell {
+  background: #e5f0ff;
+}
+
+/* ============================================================
+   FILTROS
+   ============================================================ */
+.header-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-title {
+  font-size: 0.8rem;
+}
+
+.header-filter {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  padding: 2px 6px;
+  font-size: 0.78rem;
+  background: #eef2ff;
+  color: #0f172a;
+  height: 24px;
+}
+
+/* ============================================================
+   LARGURA DAS COLUNAS
+   ============================================================ */
+
+.alvos-table .mat-mdc-cell:nth-child(1),
+.alvos-table .mat-mdc-header-cell:nth-child(1) {
+  width: 60px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(2),
+.alvos-table .mat-mdc-header-cell:nth-child(2) {
+  width: 120px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(3),
+.alvos-table .mat-mdc-header-cell:nth-child(3) {
+  width: 170px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(4),
+.alvos-table .mat-mdc-header-cell:nth-child(4) {
+  width: 90px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(6),
+.alvos-table .mat-mdc-header-cell:nth-child(6) {
+  width: 160px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(7),
+.alvos-table .mat-mdc-header-cell:nth-child(7) {
+  width: 100px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(8),
+.alvos-table .mat-mdc-header-cell:nth-child(8) {
+  width: 100px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(9),
+.alvos-table .mat-mdc-header-cell:nth-child(9) {
+  width: 170px;
+}
+
+/* ============================================================
+   ALINHAMENTO DAS INFORMAÇÕES
+   ============================================================ */
+
+/* Centralizar colunas */
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(1),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(2),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(3),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(4),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(6),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(7),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(8) {
+  text-align: center !important;
+}
+
+/* Envolvido alinhado à esquerda */
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(5) {
+  text-align: left !important;
+  padding-left: 14px;
+  white-space: normal;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+/* Ações centralizadas */
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(9) {
+  text-align: center !important;
+}
+
+/* ============================================================
+   RESTAURAR LINHAS DA TABELA
+   ============================================================ */
+
+/* linhas horizontais */
+.alvos-table .mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* linhas verticais */
+.alvos-table .mat-mdc-cell,
+.alvos-table .mat-mdc-header-cell {
+  border-right: 1px solid #e5e7eb;
+}
+
+/* remover última borda */
+.alvos-table .mat-mdc-cell:last-child,
+.alvos-table .mat-mdc-header-cell:last-child {
+  border-right: none;
+}
+
+/* linha separando cabeçalho */
+.alvos-table .mat-mdc-header-row .mat-mdc-header-cell {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ============================================================
+   AÇÕES
+   ============================================================ */
+.actions-header {
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.btn-icon mat-icon {
+  font-size: 18px;
+}
+
+.btn-view {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.btn-view mat-icon {
+  color: #1e40af;
+}
+
+.btn-edit {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.btn-edit mat-icon {
+  color: #1d4ed8;
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-delete mat-icon {
+  color: #dc2626;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(209, 213, 219, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.page-size a {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #0067ff;
+  text-decoration: none;
+}
+
+.page-size a:hover {
+  text-decoration: underline;
+}
+
+.nav button {
+  margin-left: 8px;
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+
+@media (max-width: 1200px) {
+  .page-wrapper {
+    padding: 16px;
+  }
+
+  .card-panel {
+    max-width: 100%;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .alvos-table {
+    min-width: 1200px;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .btn-new {
+    align-self: flex-start;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+ 
+}
+
+.no-data-row td,
+.no-data-row td.mat-cell,
+.no-data-row .empty-row {
+  padding: 0 !important;
+  text-align: center !important;
+  border-right: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+}
+
+.empty-row-content {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f2937;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.alvos-table .no-data-row:hover td,
+.alvos-table .no-data-row:hover .mat-cell {
+  background: #ffffff !important;
+}

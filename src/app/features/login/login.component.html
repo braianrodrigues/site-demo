@@ -1,0 +1,59 @@
+<!-- Fundo com gradiente -->
+<div class="login-hero"><div class="overlay"></div></div>
+
+<!-- Container principal -->
+<div class="login-wrap">
+  <mat-card class="login-card">
+    <div class="logo">
+      <img src="assets/logo.png" alt="Sistema" width="64" height="64" />
+      <div>
+        <h2>Sistema de Gestão</h2>
+        <small>Acesso restrito</small>
+      </div>
+    </div>
+
+    <form (ngSubmit)="submit()" autocomplete="off">
+      <mat-form-field appearance="outline">
+        <mat-label>Usuário</mat-label>
+        <input
+          matInput
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          [ngModelOptions]="{ standalone: true }"
+          autocomplete="username"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input
+          matInput
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          [ngModelOptions]="{ standalone: true }"
+          autocomplete="current-password"
+          required
+        />
+      </mat-form-field>
+
+      <!-- o (click) força a chamada mesmo se algum script cancelar o submit -->
+      <button
+        mat-raised-button
+        color="primary"
+        class="w100"
+        type="submit"
+        (click)="submit(); $event.preventDefault()"
+      >
+        Acessar
+      </button>
+
+      <div *ngIf="error" class="error-msg">{{ error }}</div>
+    </form>
+
+    <!-- Botão opcional de diagnóstico (pode remover depois) -->
+    <!-- <button mat-stroked-button (click)="submit()">TESTAR CHAMADA</button> -->
+  </mat-card>
+</div>

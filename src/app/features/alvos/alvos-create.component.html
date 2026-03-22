@@ -1,0 +1,725 @@
+<!-- src/app/features/alvos/alvos-create.component.html -->
+<form class="alvo-form" [formGroup]="form" (ngSubmit)="salvar()" [class.readonly]="readonlyMode">
+  <mat-card class="alvo-card">
+
+    <div class="card-header">
+      <div class="title">
+        <mat-icon class="title-icon">track_changes</mat-icon>
+        <div>
+          <div class="h1">Cadastro de Alvo</div>
+          <div class="sub">Preencha os dados e avance pelas abas</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-stroked-button type="button" (click)="cancelar()">
+          <mat-icon>arrow_back</mat-icon> Voltar
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="content">
+      <mat-tab-group
+        class="tabs"
+        [selectedIndex]="tabIndex"
+        (selectedIndexChange)="onTabChange($event)"
+        animationDuration="150ms"
+      >
+
+        <!-- ===================== ABA 0 - INICIAL ===================== -->
+        <mat-tab label="Inicial">
+          <div class="tab-body">
+            <div class="grid-2">
+
+              <!-- FOTOS -->
+              <section class="panel foto-panel">
+                <div class="panel-title">
+                  <mat-icon>image</mat-icon>
+                  <span>Fotos do Alvo</span>
+                </div>
+
+                <div class="foto-viewer">
+                  <button
+                    type="button"
+                    class="nav left"
+                    mat-icon-button
+                    (click)="prevFoto()"
+                    [disabled]="fotos.length <= 1"
+                    aria-label="Foto anterior"
+                  >
+                    <mat-icon>chevron_left</mat-icon>
+                  </button>
+
+                  <ng-container *ngIf="fotos.length > 0; else vazio">
+                    <img
+                      [src]="fotos[currentFoto].url"
+                      alt="Foto do alvo"
+                      loading="eager"
+                      decoding="async"
+                      fetchpriority="high"
+                    />
+                  </ng-container>
+
+                  <ng-template #vazio>
+                    <div class="placeholder">
+                      <mat-icon>add_a_photo</mat-icon>
+                      <div class="ph-title">Nenhuma foto enviada</div>
+                      <div class="ph-sub">Envie até 12 imagens (JPG/PNG/WEBP)</div>
+                    </div>
+                  </ng-template>
+
+                  <button
+                    type="button"
+                    class="nav right"
+                    mat-icon-button
+                    (click)="nextFoto()"
+                    [disabled]="fotos.length <= 1"
+                    aria-label="Próxima foto"
+                  >
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
+                </div>
+
+                <div class="thumbs" *ngIf="fotos.length > 1">
+                  <button
+                    type="button"
+                    *ngFor="let item of fotos; let i = index; trackBy: trackByFoto"
+                    (click)="goFoto(i)"
+                    [class.active]="i === currentFoto"
+                    aria-label="Selecionar foto"
+                  >
+                    <img [src]="item.url" alt="thumb" loading="lazy" decoding="async" />
+                  </button>
+                </div>
+
+                <div class="btns-foto" *ngIf="!readonlyMode">
+                  <input #fileInput type="file" [accept]="ACCEPT" multiple hidden (change)="onFotosChange($event)" />
+
+                  <button mat-raised-button color="primary" type="button" (click)="abrirSeletorArquivo()">
+                    <mat-icon>upload</mat-icon> Enviar fotos
+                  </button>
+
+                  <button mat-stroked-button type="button" (click)="removerFotoAtual()" [disabled]="!fotos.length || salvando()">
+                    <mat-icon>delete</mat-icon> Remover atual
+                  </button>
+
+                  <button mat-stroked-button type="button" (click)="limparTodas()" [disabled]="!fotos.length || salvando()">
+                    <mat-icon>cleaning_services</mat-icon> Limpar todas
+                  </button>
+
+                  <div class="hint">
+                    Formatos: JPG, PNG, WEBP • Máx/arquivo: {{ MAX_MB }} MB • Máx: 12 fotos
+                  </div>
+                </div>
+              </section>
+
+              <!-- DADOS INICIAIS -->
+              <section class="panel">
+                <div class="panel-title">
+                  <mat-icon>badge</mat-icon>
+                  <span>Identificação</span>
+                </div>
+
+                <div class="row">
+                  <mat-form-field appearance="outline" class="grow">
+                    <mat-label>Nome do Alvo</mat-label>
+                    <input matInput formControlName="nome" />
+                    <mat-error *ngIf="f['nome'].touched && f['nome'].errors?.['required']">Obrigatório</mat-error>
+                    <mat-error *ngIf="f['nome'].touched && f['nome'].errors?.['minlength']">Mínimo 3 caracteres</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Vulgo</mat-label>
+                    <input matInput formControlName="vulgo" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Matrícula</mat-label>
+                    <input matInput formControlName="matricula" />
+                  </mat-form-field>
+                </div>
+
+                <div class="row">
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Situação</mat-label>
+                    <mat-select formControlName="situacao">
+                      <mat-option *ngFor="let s of situacoes" [value]="s">{{ s }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="row">
+                  <mat-form-field appearance="outline" class="md">
+                    <mat-label>Operação</mat-label>
+                    <mat-select formControlName="operacao">
+                      <mat-option *ngFor="let op of operacoes" [value]="op">{{ op }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="md">
+                    <mat-label>Tipo Alvo</mat-label>
+                    <mat-select formControlName="tipoAlvo">
+                      <mat-option *ngFor="let t of tiposAlvo" [value]="t">{{ t }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Facção</mat-label>
+                    <mat-select formControlName="faccao">
+                      <mat-option *ngFor="let fcx of faccoes" [value]="fcx">{{ fcx }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="row">
+                  <mat-form-field appearance="outline" class="full">
+                    <mat-label>Resumo</mat-label>
+                    <textarea matInput rows="8" formControlName="resumo"></textarea>
+                  </mat-form-field>
+                </div>
+              </section>
+
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 1 - QUALIFICAÇÃO ===================== -->
+        <mat-tab label="Qualificação">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>person</mat-icon>
+                <span>Qualificação</span>
+              </div>
+
+              <div class="row">
+                <mat-form-field appearance="outline" class="grow">
+                  <mat-label>Nome Pai</mat-label>
+                  <input matInput formControlName="nomePai" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="grow">
+                  <mat-label>Nome Mãe</mat-label>
+                  <input matInput formControlName="nomeMae" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="sm">
+                  <mat-label>Data Nascimento</mat-label>
+                  <input matInput formControlName="dataNascimento" (input)="onDataNascInput($event)" placeholder="dd/mm/aaaa" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="sm">
+                  <mat-label>CPF</mat-label>
+                  <input matInput formControlName="cpf" placeholder="000.000.000-00" (input)="onCpfInputPrincipal($event)" />
+                  <mat-error *ngIf="f['cpf'].touched && f['cpf'].errors?.['required']">Obrigatório</mat-error>
+                  <mat-error *ngIf="f['cpf'].touched && f['cpf'].errors?.['pattern']">Formato inválido</mat-error>
+                  <mat-error *ngIf="f['cpf'].touched && f['cpf'].errors?.['cpfDuplicado']">CPF já cadastrado</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="sm">
+                  <mat-label>RG</mat-label>
+                  <input matInput formControlName="rg" />
+                </mat-form-field>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 2 - ENDEREÇOS ===================== -->
+        <mat-tab label="Endereços">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>home</mat-icon>
+                <span>Endereços</span>
+                <span class="spacer"></span>
+
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="maps-btn"
+                  (click)="openMaps()"
+                  [disabled]="!mapsOpenUrl"
+                >
+                  <mat-icon>map</mat-icon> Ver no Google Maps
+                </button>
+
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="addEndereco()"
+                  *ngIf="!readonlyMode"
+                  style="margin-left: 10px;"
+                >
+                  <mat-icon>add</mat-icon> Adicionar endereço
+                </button>
+              </div>
+
+              <div formArrayName="enderecos" class="stack">
+                <div
+                  class="panel"
+                  style="margin-bottom: 14px;"
+                  *ngFor="let e of enderecos.controls; let i = index; trackBy: trackByIndex"
+                  [formGroupName]="i"
+                >
+                  <div class="panel-title" style="margin-bottom: 10px;">
+                    <mat-icon>location_on</mat-icon>
+                    <span>Endereço {{ i + 1 }}</span>
+
+                    <span class="spacer"></span>
+
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      (click)="selectEndereco(i)"
+                      [disabled]="selectedEnderecoIndex === i"
+                    >
+                      <mat-icon>pin_drop</mat-icon> Mostrar no mapa
+                    </button>
+
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      type="button"
+                      (click)="removeEndereco(i)"
+                      *ngIf="!readonlyMode && enderecos.length > 1"
+                      matTooltip="Remover endereço"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="row">
+                    <mat-form-field appearance="outline" class="sm">
+                      <mat-label>CEP</mat-label>
+                      <input
+                        matInput
+                        formControlName="cep"
+                        placeholder="00000-000"
+                        (input)="onCepInput(i, $event)"
+                        (blur)="buscarCep(i)"
+                      />
+                      <mat-progress-spinner
+                        *ngIf="cepLoadingIndex === i"
+                        matSuffix
+                        mode="indeterminate"
+                        [diameter]="18"
+                        [strokeWidth]="3"
+                        style="margin-right: 4px"
+                      ></mat-progress-spinner>
+                      <mat-error *ngIf="e.get('cep')?.touched && e.get('cep')?.errors?.['pattern']">CEP inválido</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="grow">
+                      <mat-label>Logradouro</mat-label>
+                      <input
+                        matInput
+                        formControlName="logradouro"
+                        (input)="selectedEnderecoIndex = i; updateMaps()"
+                      />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="xs">
+                      <mat-label>Número</mat-label>
+                      <input
+                        matInput
+                        formControlName="numero"
+                        (input)="selectedEnderecoIndex = i; updateMaps()"
+                      />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="md">
+                      <mat-label>Complemento</mat-label>
+                      <input matInput formControlName="complemento" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row">
+                    <mat-form-field appearance="outline" class="md">
+                      <mat-label>Bairro</mat-label>
+                      <input
+                        matInput
+                        formControlName="bairro"
+                        (input)="selectedEnderecoIndex = i; updateMaps()"
+                      />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="xs">
+                      <mat-label>Estado</mat-label>
+                      <mat-select
+                        formControlName="estado"
+                        (selectionChange)="selectedEnderecoIndex = i; updateMaps()"
+                      >
+                        <mat-option value="">—</mat-option>
+                        <mat-option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="md">
+                      <mat-label>Cidade</mat-label>
+                      <input
+                        matInput
+                        formControlName="cidade"
+                        placeholder="Digite a cidade"
+                        (input)="selectedEnderecoIndex = i; updateMaps()"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ✅ MAPA: agora sempre aparece -->
+              <div class="map-wrap">
+                <iframe
+                  class="map-iframe"
+                  [src]="mapsEmbedSafeUrl"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 3 - VEÍCULOS ===================== -->
+        <mat-tab label="Veículos">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>directions_car</mat-icon>
+                <span>Veículos do Alvo</span>
+                <span class="spacer"></span>
+                <button mat-stroked-button type="button" (click)="addVeiculo()" *ngIf="!readonlyMode">
+                  <mat-icon>add</mat-icon> Adicionar veículo
+                </button>
+              </div>
+
+              <div formArrayName="veiculos" class="stack">
+                <div class="row" *ngFor="let v of veiculos.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Placa</mat-label>
+                    <input matInput formControlName="placa" placeholder="ABC-1234" (input)="onPlacaInput(i, $event)" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="md">
+                    <mat-label>Marca / Modelo</mat-label>
+                    <input matInput formControlName="marcaModelo" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Cor</mat-label>
+                    <input matInput formControlName="cor" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="xs">
+                    <mat-label>Ano</mat-label>
+                    <input matInput formControlName="ano" />
+                  </mat-form-field>
+
+                  <button mat-icon-button color="warn" type="button" (click)="removeVeiculo(i)" *ngIf="!readonlyMode">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <div class="empty" *ngIf="veiculos.length === 0">Nenhum veículo cadastrado.</div>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 4 - COMPARSAS ===================== -->
+        <mat-tab label="Comparsas">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>groups</mat-icon>
+                <span>Comparsas</span>
+                <span class="spacer"></span>
+                <button mat-stroked-button type="button" (click)="addComparsa()" *ngIf="!readonlyMode">
+                  <mat-icon>add</mat-icon> Adicionar comparsa
+                </button>
+              </div>
+
+              <div formArrayName="comparsas" class="stack">
+                <div class="row" *ngFor="let c of comparsas.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+                  <mat-form-field appearance="outline" class="grow">
+                    <mat-label>Nome do Comparsa</mat-label>
+                    <input matInput formControlName="nome" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>CPF</mat-label>
+                    <input matInput formControlName="cpf" placeholder="000.000.000-00" (input)="onCpfInputComparsa(i, $event)" />
+                    <mat-error *ngIf="c.get('cpf')?.touched && c.get('cpf')?.errors?.['pattern']">CPF inválido</mat-error>
+                  </mat-form-field>
+
+                  <button mat-icon-button color="warn" type="button" (click)="removeComparsa(i)" *ngIf="!readonlyMode">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <div class="empty" *ngIf="comparsas.length === 0">Nenhum comparsa cadastrado.</div>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 5 - TELEFONES ===================== -->
+        <mat-tab label="Telefones">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>call</mat-icon>
+                <span>Telefones do Alvo</span>
+                <span class="spacer"></span>
+                <button mat-stroked-button type="button" (click)="addTelefone()" *ngIf="!readonlyMode">
+                  <mat-icon>add</mat-icon> Adicionar telefone
+                </button>
+              </div>
+
+              <div formArrayName="telefones" class="stack">
+                <div class="row" *ngFor="let t of telefones.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+                  <mat-form-field appearance="outline" class="md">
+                    <mat-label>Número</mat-label>
+                    <input matInput formControlName="numero" placeholder="(11) 99999-9999" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Tipo</mat-label>
+                    <mat-select formControlName="tipo">
+                      <mat-option value="Celular">Celular</mat-option>
+                      <mat-option value="Fixo">Fixo</mat-option>
+                      <mat-option value="WhatsApp">WhatsApp</mat-option>
+                      <mat-option value="Outro">Outro</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <button mat-icon-button color="warn" type="button" (click)="removeTelefone(i)" *ngIf="!readonlyMode">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <div class="empty" *ngIf="telefones.length === 0">Nenhum telefone cadastrado.</div>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 6 - FAMÍLIA ===================== -->
+        <mat-tab label="Família">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>family_restroom</mat-icon>
+                <span>Família</span>
+                <span class="spacer"></span>
+
+                <button mat-stroked-button type="button" (click)="addFamiliar()" *ngIf="!readonlyMode">
+                  <mat-icon>add</mat-icon> Adicionar familiar
+                </button>
+              </div>
+
+              <div formArrayName="familiares" class="stack">
+                <div class="panel" style="margin-bottom: 14px;" *ngFor="let fam of familiares.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+                  <div class="panel-title" style="margin-bottom: 10px;">
+                    <mat-icon>person</mat-icon>
+                    <span>Familiar {{ i + 1 }}</span>
+                    <span class="spacer"></span>
+
+                    <button mat-icon-button color="warn" type="button" (click)="removeFamiliar(i)" *ngIf="!readonlyMode">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="row">
+                    <mat-form-field appearance="outline" class="sm">
+                      <mat-label>Parentesco</mat-label>
+                      <mat-select formControlName="parentesco">
+                        <mat-option value="PAI">PAI</mat-option>
+                        <mat-option value="MAE">MAE</mat-option>
+                        <mat-option value="IRMA">IRMÃ</mat-option>
+                        <mat-option value="IRMAO">IRMÃO</mat-option>
+                        <mat-option value="CONJUGE">CÔNJUGE</mat-option>
+                        <mat-option value="NAMORADA">NAMORADA</mat-option>
+                        <mat-option value="NAMORADO">NAMORADO</mat-option>
+                        <mat-option value="OUTRO">OUTRO</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="fam.get('parentesco')?.touched && fam.get('parentesco')?.errors?.['required']">Obrigatório</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="grow">
+                      <mat-label>Nome</mat-label>
+                      <input matInput formControlName="nome" />
+                      <mat-error *ngIf="fam.get('nome')?.touched && fam.get('nome')?.errors?.['required']">Obrigatório</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="sm">
+                      <mat-label>CPF</mat-label>
+                      <input matInput formControlName="cpf" placeholder="000.000.000-00" inputmode="numeric" (input)="onCpfInputFamiliar(i, $event)"/>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="sm">
+                      <mat-label>Telefone</mat-label>
+                      <input matInput formControlName="telefone" placeholder="(11) 99999-9999" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row">
+                    <mat-form-field appearance="outline" class="grow">
+                      <mat-label>Observação</mat-label>
+                      <input matInput formControlName="observacao" />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="empty" *ngIf="familiares.length === 0">Nenhum familiar cadastrado.</div>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 7 - REDE SOCIAL ===================== -->
+        <mat-tab label="Rede Social">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>public</mat-icon>
+                <span>Redes Sociais</span>
+                <span class="spacer"></span>
+
+                <button mat-stroked-button type="button" (click)="addRedeSocial()" *ngIf="!readonlyMode">
+                  <mat-icon>add</mat-icon> Adicionar rede
+                </button>
+              </div>
+
+              <div formArrayName="redesSociais" class="stack">
+                <div class="row" *ngFor="let r of redesSociais.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+                  <mat-form-field appearance="outline" class="sm">
+                    <mat-label>Plataforma</mat-label>
+                    <mat-select formControlName="plataforma">
+                      <mat-option value="Instagram">Instagram</mat-option>
+                      <mat-option value="Facebook">Facebook</mat-option>
+                      <mat-option value="TikTok">TikTok</mat-option>
+                      <mat-option value="X">X</mat-option>
+                      <mat-option value="YouTube">YouTube</mat-option>
+                      <mat-option value="Outro">Outro</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="r.get('plataforma')?.touched && r.get('plataforma')?.errors?.['required']">Obrigatório</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="md">
+                    <mat-label>Usuário</mat-label>
+                    <input matInput formControlName="username" placeholder="@usuario" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="grow">
+                    <mat-label>Link</mat-label>
+                    <input matInput formControlName="url" placeholder="https://..." />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="grow">
+                    <mat-label>Observação</mat-label>
+                    <input matInput formControlName="observacao" />
+                  </mat-form-field>
+
+                  <button mat-icon-button color="warn" type="button" (click)="removeRedeSocial(i)" *ngIf="!readonlyMode">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <div class="empty" *ngIf="redesSociais.length === 0">Nenhuma rede social cadastrada.</div>
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+        <!-- ===================== ABA 8 - CORRELAÇÕES ===================== -->
+        <mat-tab label="Correlações">
+          <div class="tab-body">
+            <section class="panel">
+              <div class="panel-title">
+                <mat-icon>hub</mat-icon>
+                <span>Correlações Automáticas</span>
+                <span class="spacer"></span>
+              </div>
+
+              <div class="row" *ngIf="correlacoesLoading()">
+                <mat-progress-spinner mode="indeterminate" [diameter]="26" [strokeWidth]="3"></mat-progress-spinner>
+                <span style="margin-left: 10px;">Carregando correlações...</span>
+              </div>
+
+              <div class="error" *ngIf="correlacoesError()">{{ correlacoesError() }}</div>
+
+              <div class="empty" *ngIf="!correlacoesLoading() && correlacoes().length === 0">
+                Nenhuma correlação encontrada.
+              </div>
+
+              <div class="corr-table" *ngIf="!correlacoesLoading() && correlacoes().length > 0">
+                <div class="corr-head">
+                  <div>Tipo</div>
+                  <div>Chave</div>
+                  <div>Score</div>
+                  <div>Outro Alvo</div>
+                  <div>Ações</div>
+                  <div>Detalhe</div>
+                </div>
+
+                <div class="corr-row" *ngFor="let c of correlacoes(); trackBy: trackByCorr">
+                  <div class="pill">{{ c.tipo }}</div>
+                  <div class="mono">{{ c.chave }}</div>
+                  <div class="score">{{ c.score | number:'1.0-2' }}</div>
+
+                  <div class="link">
+                    #{{ c.outroAlvoId }} — {{ c.outroAlvoNome }}
+                    <span *ngIf="c.outroAlvoVulgo">({{ c.outroAlvoVulgo }})</span>
+                  </div>
+
+                  <div>
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      class="mini-btn"
+                      (click)="openAlvo(c.outroAlvoId)"
+                      *ngIf="!!c.outroAlvoId"
+                    >
+                      <mat-icon>open_in_new</mat-icon> Ver cadastro
+                    </button>
+                  </div>
+
+                  <div class="detail">{{ c.detalhe || '—' }}</div>
+                </div>
+              </div>
+
+              <div class="hint" style="margin-top: 10px;">
+                O sistema calcula correlações por: telefones, placas, operação, comparsas e vínculos familiares (alvoRelacionadoId).
+              </div>
+            </section>
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-actions class="actions" align="end">
+      <ng-container *ngIf="!readonlyMode; else readonlyActions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || salvando()">
+          <mat-icon>save</mat-icon> Salvar
+        </button>
+        <button mat-button type="button" (click)="cancelar()">
+          <mat-icon>close</mat-icon> Cancelar
+        </button>
+      </ng-container>
+
+      <ng-template #readonlyActions>
+        <button mat-stroked-button color="primary" type="button" (click)="cancelar()">
+          <mat-icon>arrow_back</mat-icon> Voltar
+        </button>
+      </ng-template>
+    </mat-card-actions>
+
+  </mat-card>
+</form>

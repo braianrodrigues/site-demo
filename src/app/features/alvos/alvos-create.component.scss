@@ -1,0 +1,513 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* =========================
+   Base / Tipografia
+   ========================= */
+.alvo-form {
+  padding: 16px 24px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #0f172a;
+  overflow-x: hidden;
+}
+
+/* =========================
+   Container principal
+   ========================= */
+.alvo-card {
+  width: 100%;
+  max-width: 2200px;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 18px 46px rgba(16, 24, 40, 0.12);
+  overflow: hidden;
+}
+
+/* =========================
+   Header
+   ========================= */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #0f172a;
+    }
+
+    .sub {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #475569;
+    }
+  }
+}
+
+/* =========================
+   Conteúdo
+   ========================= */
+.content {
+  padding: 20px 22px;
+  overflow-x: hidden;
+}
+
+/* =========================
+   Tabs
+   ========================= */
+.tabs {
+  ::ng-deep .mat-mdc-tab-labels {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15px;
+    color: #0f172a;
+  }
+
+  ::ng-deep .mdc-tab--active {
+    color: #0b57d0;
+  }
+
+  ::ng-deep .mat-mdc-tab-body,
+  ::ng-deep .mat-mdc-tab-body-content {
+    overflow: visible !important;
+    height: auto !important;
+  }
+}
+
+.tab-body {
+  padding-top: 18px;
+}
+
+/* =========================
+   Grid principal
+   ========================= */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 460px minmax(0, 1fr);
+  gap: 20px;
+  align-items: flex-start;
+
+  @media (max-width: 1400px) {
+    grid-template-columns: 420px minmax(0, 1fr);
+  }
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   Panels
+   ========================= */
+.panel {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.08);
+}
+
+/* header do painel com botão à direita */
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.panel-title .spacer {
+  flex: 1 1 auto;
+}
+
+.panel-title button[mat-stroked-button] {
+  margin-left: auto;
+}
+
+/* =========================
+   Foto
+   ========================= */
+.foto-panel {
+  .foto-viewer {
+    position: relative;
+    height: 540px;
+    max-height: 62vh;
+    border-radius: 18px;
+    border: 1px dashed rgba(15, 23, 42, 0.18);
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+
+    .nav.left {
+      left: 10px;
+    }
+    .nav.right {
+      right: 10px;
+    }
+  }
+
+  .thumbs {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    height: 86px;
+    max-height: 86px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+    align-items: center;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+
+    button {
+      width: 86px;
+      height: 86px;
+      padding: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      background: #fff;
+      cursor: pointer;
+
+      &.active {
+        outline: 2px solid rgba(11, 87, 208, 0.55);
+        border-color: transparent;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+  }
+
+  .btns-foto {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+/* =========================
+   Form layout
+   ========================= */
+.row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.full {
+  flex: 1 1 100%;
+}
+.grow {
+  flex: 1 1 520px;
+  min-width: 280px;
+}
+.md {
+  flex: 1 1 320px;
+  min-width: 240px;
+}
+.sm {
+  flex: 1 1 220px;
+  min-width: 200px;
+}
+.xs {
+  flex: 0 0 160px;
+  min-width: 160px;
+}
+
+@media (max-width: 900px) {
+  .grow,
+  .md,
+  .sm,
+  .xs {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   Angular Material MDC (OUTLINE)
+   FIX 100%: borda NÃO passa por trás do label (Resumo/Situação/etc)
+   ========================================================= */
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+/* caixa */
+:host ::ng-deep .mat-mdc-form-field .mdc-text-field {
+  border-radius: 14px !important;
+  background: #fff;
+}
+
+/* altura/padding */
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-infix {
+  min-height: 48px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* bordas */
+:host ::ng-deep .mdc-notched-outline__leading,
+:host ::ng-deep .mdc-notched-outline__notch,
+:host ::ng-deep .mdc-notched-outline__trailing {
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+/* hover */
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: rgba(15, 23, 42, 0.32) !important;
+}
+
+/* focus */
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: rgba(11, 87, 208, 0.85) !important;
+}
+
+/* remove emenda vertical (“linha fantasma”) */
+:host ::ng-deep .mdc-notched-outline__leading {
+  border-right: 0 !important;
+}
+
+/* notch */
+:host ::ng-deep .mdc-notched-outline__notch {
+  border-left: 0 !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+
+/* FIX PRINCIPAL: label “tampa” a linha do outline */
+:host ::ng-deep .mat-mdc-floating-label {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12px;
+  color: rgba(15, 23, 42, 0.72) !important;
+
+  background: #fff !important;
+  padding: 0 6px !important;
+  border-radius: 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+
+/* texto/valor */
+:host ::ng-deep .mat-mdc-input-element,
+:host ::ng-deep .mat-mdc-select-value-text,
+:host ::ng-deep textarea.mat-mdc-input-element {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1px;
+  color: #0f172a !important;
+}
+
+/* seta */
+:host ::ng-deep .mat-mdc-select-arrow {
+  opacity: 0.75;
+}
+
+/* dropdown */
+:host ::ng-deep .mat-mdc-select-panel {
+  border-radius: 14px !important;
+  box-shadow: 0 18px 44px rgba(16, 24, 40, 0.18) !important;
+  border: 1px solid rgba(15, 23, 42, 0.10) !important;
+  padding: 6px 0 !important;
+}
+
+/* options */
+:host ::ng-deep .mat-mdc-option {
+  font-size: 13.25px !important;
+  font-weight: 500 !important;
+}
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background: rgba(11, 87, 208, 0.08) !important;
+}
+
+/* textarea */
+textarea[matInput] {
+  min-height: 260px;
+  resize: vertical;
+}
+
+/* =========================
+   Mapa
+   ========================= */
+.map-wrap {
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 14px 28px rgba(16, 24, 40, 0.12);
+  min-height: 620px;
+}
+
+.map-iframe {
+  width: 100%;
+  height: 620px;
+  border: 0;
+  display: block;
+}
+
+/* =========================
+   Navegação / Actions
+   ========================= */
+.tab-nav {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  gap: 12px;
+
+  .spacer {
+    flex: 1;
+  }
+}
+
+.actions {
+  padding: 14px 18px 18px;
+}
+
+/* ====== Correlações ====== */
+.corr-table {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.corr-head,
+.corr-row {
+  display: grid; 
+  grid-template-columns: 140px 260px 90px 1fr 220px 1.2fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.corr-head {
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 13px;
+  background: #0b5cff;
+  color: #fff;
+}
+
+.corr-row {
+  padding: 12px 14px;
+  font-size: 13px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.corr-row:nth-child(even) {
+  background: rgba(11, 92, 255, 0.035);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  background: rgba(11, 92, 255, 0.12);
+  color: #0b5cff;
+  width: fit-content;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12.5px;
+}
+
+.score {
+  font-weight: 800;
+}
+
+.link {
+  font-weight: 600;
+}
+
+.detail {
+  opacity: 0.85;
+}
+
+/* Responsivo: quebra a tabela em cards */
+@media (max-width: 980px) {
+  .corr-head {
+    display: none;
+  }
+
+  .corr-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .corr-row > div::before {
+    display: inline-block;
+    width: 120px;
+    opacity: 0.7;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .corr-row > div:nth-child(1)::before { content: "Tipo"; }
+  .corr-row > div:nth-child(2)::before { content: "Chave"; }
+  .corr-row > div:nth-child(3)::before { content: "Score"; }
+  .corr-row > div:nth-child(4)::before { content: "Outro Alvo"; }
+  .corr-row > div:nth-child(5)::before { content: "Ações"; }
+  .corr-row > div:nth-child(6)::before { content: "Detalhe"; }
+}

@@ -1,0 +1,289 @@
+<div class="page">
+  <mat-card class="card">
+
+    <!-- HEADER -->
+    <div class="card-header">
+      <div class="title-wrap">
+        <div class="title">{{ title() }}</div>
+        <div class="subtitle">
+          Preencha os dados do cadastro telefônico no padrão operacional do sistema.
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-stroked-button type="button" (click)="back()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="save()"
+          [disabled]="saving() || readonlyMode()"
+        >
+          <mat-icon>save</mat-icon>
+          {{ saving() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="card-body">
+
+      <!-- LOADING -->
+      <div class="loading-wrap" *ngIf="loading(); else contentTpl">
+        <mat-spinner diameter="36"></mat-spinner>
+        <span>Carregando cadastro...</span>
+      </div>
+
+      <ng-template #contentTpl>
+        <form [formGroup]="form">
+
+          <!-- DADOS DO CADASTRO -->
+          <section class="section-card">
+            <div class="section-head">
+              <div>
+                <div class="section-title">Dados do cadastro</div>
+                <div class="section-subtitle">
+                  Informações principais do registro telefônico.
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Cadastrado por</mat-label>
+                <input matInput formControlName="cadastradoPor" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Data do cadastro</mat-label>
+                <input matInput type="date" formControlName="dataCadastro" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Número do telefone</mat-label>
+                <input matInput formControlName="numeroTelefone" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Operadora</mat-label>
+                <mat-select formControlName="operadora">
+                  <mat-option [value]="null">Selecione</mat-option>
+                  <mat-option *ngFor="let item of operadoras" [value]="item">
+                    {{ item }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Situação</mat-label>
+                <mat-select formControlName="situacao">
+                  <mat-option [value]="null">Selecione</mat-option>
+                  <mat-option *ngFor="let item of situacoes" [value]="item">
+                    {{ item }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Plano</mat-label>
+                <mat-select formControlName="plano">
+                  <mat-option [value]="null">Selecione</mat-option>
+                  <mat-option *ngFor="let item of planos" [value]="item">
+                    {{ item }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- OPERAÇÃO -->
+              <div>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Operação</mat-label>
+
+                  <mat-select formControlName="operacaoNome">
+                    <mat-option [value]="null">Selecione</mat-option>
+
+                    <mat-option
+                      *ngFor="let item of getOperacoesDoSelect()"
+                      [value]="item"
+                    >
+                      {{ item }}
+                      <span *ngIf="isOperacaoHistorica(item)"> (histórico)</span>
+                    </mat-option>
+
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- AVISO HISTÓRICO -->
+                <div
+                  class="historico-info"
+                  *ngIf="
+                    form.get('operacaoNome')?.value &&
+                    isOperacaoHistorica(form.get('operacaoNome')?.value)
+                  "
+                >
+                  Operação registrada no histórico:
+                  <strong>{{ form.get('operacaoNome')?.value }}</strong>
+                </div>
+
+              </div>
+
+              <!-- PRORROGAÇÃO -->
+              <div class="span-2">
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Prorrogação</mat-label>
+
+                  <mat-select formControlName="prorrogacaoDescricao">
+
+                    <mat-option [value]="null">Selecione</mat-option>
+
+                    <mat-option
+                      *ngFor="let item of getProrrogacoesDoSelect()"
+                      [value]="item"
+                    >
+                      {{ formatProrrogacaoDescricao(item) }}
+
+                      <span *ngIf="isProrrogacaoHistorica(item)">
+                        (histórico)
+                      </span>
+
+                    </mat-option>
+
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- AVISO HISTÓRICO -->
+                <div
+                  class="historico-info"
+                  *ngIf="
+                    form.get('prorrogacaoDescricao')?.value &&
+                    isProrrogacaoHistorica(form.get('prorrogacaoDescricao')?.value)
+                  "
+                >
+                  Prorrogação registrada no histórico:
+                  <strong>
+                    {{ formatProrrogacaoDescricao(form.get('prorrogacaoDescricao')?.value) }}
+                  </strong>
+                </div>
+
+              </div>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Possui registros anteriores</mat-label>
+                <mat-select formControlName="possuiRegistrosAnteriores">
+                  <mat-option [value]="null">Selecione</mat-option>
+                  <mat-option *ngFor="let item of possuiRegistrosOptions" [value]="item">
+                    {{ item }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+          </section>
+
+          <!-- DADOS CADASTRAIS -->
+          <section class="section-card field-gap-top">
+
+            <div class="section-head">
+              <div>
+                <div class="section-title">Dados cadastrais</div>
+                <div class="section-subtitle">
+                  Informações pessoais vinculadas ao telefone consultado.
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+
+              <mat-form-field appearance="outline" class="span-2">
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="nome" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Cidade</mat-label>
+                <input matInput formControlName="cidade" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>RG</mat-label>
+                <input matInput formControlName="rg" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>CPF</mat-label>
+                <input matInput formControlName="cpf" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Data da ativação</mat-label>
+                <input matInput type="date" formControlName="dataAtivacao" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="span-3">
+                <mat-label>Endereço</mat-label>
+                <input matInput formControlName="endereco" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Data da consulta</mat-label>
+                <input matInput type="date" formControlName="dataConsulta" />
+              </mat-form-field>
+
+            </div>
+          </section>
+
+          <!-- OBSERVAÇÕES -->
+          <section class="section-card field-gap-top">
+
+            <div class="section-head">
+              <div>
+                <div class="section-title">Observações</div>
+                <div class="section-subtitle">
+                  Registre apontamentos complementares do cadastro telefônico.
+                </div>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Observações</mat-label>
+              <textarea matInput formControlName="observacoes"></textarea>
+            </mat-form-field>
+
+          </section>
+
+          <!-- FOOTER -->
+          <div class="footer-actions" *ngIf="!readonlyMode()">
+
+            <span class="spacer"></span>
+
+            <button mat-stroked-button type="button" (click)="back()">
+              Cancelar
+            </button>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              (click)="save()"
+              [disabled]="saving()"
+            >
+              <mat-icon>save</mat-icon>
+              {{ saving() ? 'Salvando...' : 'Salvar' }}
+            </button>
+
+          </div>
+
+        </form>
+      </ng-template>
+
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,269 @@
+<div class="page">
+  <mat-card class="card">
+    <div class="card-header">
+      <div class="title-wrap">
+        <div class="title">Gerenciar Operações</div>
+        <div class="subtitle">
+          Cadastre operações e prorrogações que serão utilizadas no Cadastro Telefônico.
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-stroked-button type="button" (click)="resetOperacaoForm()">
+          <mat-icon>refresh</mat-icon>
+          Nova operação
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="card-body">
+      <div class="grid-2">
+        <!-- ESQUERDA -->
+        <section class="section-card left-panel">
+          <div class="block-title">
+            <mat-icon>folder_open</mat-icon>
+            Operações cadastradas
+          </div>
+
+          <div class="loading-wrap" *ngIf="loadingOperacoes(); else listaOperacoesTpl">
+            <mat-spinner diameter="34"></mat-spinner>
+            <span>Carregando operações...</span>
+          </div>
+
+          <ng-template #listaOperacoesTpl>
+            <div class="empty-state" *ngIf="operacoes().length === 0">
+              Nenhuma operação cadastrada até o momento.
+            </div>
+
+            <div class="operacoes-list" *ngIf="operacoes().length > 0">
+              <button
+                type="button"
+                class="operacao-item"
+                *ngFor="let operacao of operacoes()"
+                [class.active]="selectedOperacao()?.id === operacao.id"
+                (click)="selectOperacao(operacao)"
+              >
+                <div class="operacao-item-header">
+                  <span class="operacao-nome">{{ operacao.nome }}</span>
+
+                  <span class="status-pill" [class.inativo]="!operacao.ativo">
+                    {{ operacao.ativo ? 'Ativa' : 'Inativa' }}
+                  </span>
+                </div>
+
+                <div class="operacao-item-actions">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="editOperacao(operacao); $event.stopPropagation()"
+                    matTooltip="Editar operação"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="deleteOperacao(operacao); $event.stopPropagation()"
+                    matTooltip="Excluir operação"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </button>
+            </div>
+          </ng-template>
+        </section>
+
+        <!-- DIREITA -->
+        <section class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="section-title">
+                {{ operacaoEmEdicaoId() ? 'Editar operação' : 'Nova operação' }}
+              </div>
+              <div class="section-subtitle">
+                Cadastre o nome da operação que será vinculada ao Cadastro Telefônico.
+              </div>
+            </div>
+          </div>
+
+          <form [formGroup]="operacaoForm">
+            <div class="grid-2">
+              <mat-form-field appearance="outline" class="span-2">
+                <mat-label>Nome da operação</mat-label>
+                <input matInput formControlName="nome" />
+                <mat-error *ngIf="hasOperacaoError('nome', 'required')">
+                  O nome da operação é obrigatório.
+                </mat-error>
+                <mat-error *ngIf="hasOperacaoError('nome', 'maxlength')">
+                  O nome da operação deve ter no máximo 150 caracteres.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="toggle-wrap">
+              <mat-slide-toggle formControlName="ativo">Operação ativa</mat-slide-toggle>
+            </div>
+
+            <div class="footer-actions">
+              <span class="spacer"></span>
+
+              <button mat-stroked-button type="button" (click)="resetOperacaoForm()">
+                Limpar
+              </button>
+
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                (click)="saveOperacao()"
+                [disabled]="savingOperacao()"
+              >
+                <mat-icon>save</mat-icon>
+                {{ savingOperacao() ? 'Salvando...' : 'Salvar operação' }}
+              </button>
+            </div>
+          </form>
+
+          <mat-divider class="divider-space"></mat-divider>
+
+          <div class="section-head">
+            <div>
+              <div class="section-title">Prorrogações</div>
+              <div class="section-subtitle">
+                Cadastre e gerencie as prorrogações vinculadas à operação selecionada.
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state warning" *ngIf="!hasOperacaoSelecionada()">
+            Selecione uma operação na lista ao lado para gerenciar as prorrogações.
+          </div>
+
+          <ng-container *ngIf="hasOperacaoSelecionada()">
+            <div class="selected-operacao-box">
+              <mat-icon>assignment</mat-icon>
+              <span>Operação selecionada: <strong>{{ selectedOperacao()?.nome }}</strong></span>
+            </div>
+
+            <form [formGroup]="prorrogacaoForm">
+              <div class="grid-3 field-gap-top">
+                <mat-form-field appearance="outline">
+                  <mat-label>Nome da prorrogação</mat-label>
+                  <input matInput formControlName="nome" />
+                  <mat-error *ngIf="hasProrrogacaoError('nome', 'required')">
+                    O nome da prorrogação é obrigatório.
+                  </mat-error>
+                  <mat-error *ngIf="hasProrrogacaoError('nome', 'maxlength')">
+                    O nome da prorrogação deve ter no máximo 150 caracteres.
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Data de início</mat-label>
+                  <input matInput type="date" formControlName="dataInicio" />
+                  <mat-error *ngIf="hasProrrogacaoError('dataInicio', 'required')">
+                    A data de início é obrigatória.
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Data de término</mat-label>
+                  <input matInput type="date" formControlName="dataFim" />
+                  <mat-error *ngIf="hasProrrogacaoError('dataFim', 'required')">
+                    A data de término é obrigatória.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="toggle-wrap">
+                <mat-slide-toggle formControlName="ativo">Prorrogação ativa</mat-slide-toggle>
+              </div>
+
+              <div class="footer-actions">
+                <span class="spacer"></span>
+
+                <button mat-stroked-button type="button" (click)="resetProrrogacaoForm()">
+                  Limpar
+                </button>
+
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="button"
+                  (click)="saveProrrogacao()"
+                  [disabled]="savingProrrogacao()"
+                >
+                  <mat-icon>save</mat-icon>
+                  {{ savingProrrogacao() ? 'Salvando...' : 'Salvar prorrogação' }}
+                </button>
+              </div>
+            </form>
+
+            <div class="loading-wrap" *ngIf="loadingProrrogacoes(); else prorrogacoesTpl">
+              <mat-spinner diameter="34"></mat-spinner>
+              <span>Carregando prorrogações...</span>
+            </div>
+
+            <ng-template #prorrogacoesTpl>
+              <div class="empty-state" *ngIf="prorrogacoes().length === 0">
+                Nenhuma prorrogação cadastrada para esta operação.
+              </div>
+
+              <div class="table-container" *ngIf="prorrogacoes().length > 0">
+                <table class="prorrogacoes-table">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Período</th>
+                      <th>Status</th>
+                      <th class="actions-header">Ações</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let prorrogacao of prorrogacoes()">
+                      <td>{{ prorrogacao.nome }}</td>
+                      <td>
+                        {{ prorrogacao.dataInicio | brDate }} até {{ prorrogacao.dataFim | brDate }}
+                      </td>
+                      <td>
+                        <span class="status-pill" [class.inativo]="!prorrogacao.ativo">
+                          {{ prorrogacao.ativo ? 'Ativa' : 'Inativa' }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <button
+                            class="btn-icon btn-edit"
+                            type="button"
+                            (click)="editProrrogacao(prorrogacao)"
+                            matTooltip="Editar prorrogação"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+
+                          <button
+                            class="btn-icon btn-delete"
+                            type="button"
+                            (click)="deleteProrrogacao(prorrogacao)"
+                            matTooltip="Excluir prorrogação"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+          </ng-container>
+        </section>
+      </div>
+    </div>
+  </mat-card>
+</div>

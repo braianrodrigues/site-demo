@@ -1,0 +1,651 @@
+<!-- src/app/features/produtividade/produtividade-create.component.html -->
+<div class="page">
+  <mat-card class="card">
+    <!-- HEADER -->
+    <div class="card-header">
+      <div class="title-wrap">
+        <div class="title">Cadastro de Produtividade</div>
+        <div class="subtitle">
+          Preencha os campos e organize os dados por abas (Qualificação, Armas, Celulares e Apreensões).
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button mat-stroked-button type="button" (click)="cancel()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="saving()"
+          (click)="save()"
+        >
+          <mat-icon>save</mat-icon>
+          {{ saving() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- BODY -->
+    <div class="card-body">
+      <form [formGroup]="form" autocomplete="off">        
+        <mat-tab-group #mainTabs class="main-tabs" animationDuration="150ms" dynamicHeight>
+          <!-- ===================================== -->
+          <!-- ABA 1: DADOS INICIAIS + SÍNTESE -->
+          <!-- ===================================== -->
+          <mat-tab label="Dados iniciais">
+            <div class="tab-pad">
+              <div class="grid-3">                
+                <ng-container *ngIf="isAdmin(); else cadastradoPorReadonly">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cadastrado por</mat-label>
+                    <mat-select formControlName="cadastradoPorUserId">
+                      <mat-option [value]="null" disabled>Selecione...</mat-option>
+                      <mat-option *ngFor="let u of users()" [value]="u.id">
+                        {{ u.nome }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="
+                        form.controls.cadastradoPorUserId.touched &&
+                        form.controls.cadastradoPorUserId.invalid
+                      "
+                    >
+                      Campo obrigatório
+                    </mat-error>
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-template #cadastradoPorReadonly>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cadastrado por</mat-label>
+                    <input matInput [value]="currentUserName()" readonly />
+                    <mat-hint>Preenchido automaticamente pelo usuário logado.</mat-hint>
+                  </mat-form-field>
+                </ng-template>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Data</mat-label>
+                  <input matInput [matDatepicker]="dp" formControlName="data" />
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                  <mat-error *ngIf="form.controls.data.touched && form.controls.data.invalid">
+                    Campo obrigatório
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Natureza</mat-label>
+                  <mat-select formControlName="natureza">
+                    <mat-option [value]="null" disabled>Selecione...</mat-option>
+                    <mat-option *ngFor="let n of naturezaOptions" [value]="n.value">
+                      {{ n.label }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="form.controls.natureza.touched && form.controls.natureza.invalid"
+                  >
+                    Campo obrigatório
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="grid-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Equipe</mat-label>
+                  <mat-select formControlName="equipe">
+                    <mat-option [value]="null" disabled>Selecione...</mat-option>
+                    <mat-option *ngFor="let e of equipeOptions" [value]="e">{{ e }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form.controls.equipe.touched && form.controls.equipe.invalid">
+                    Campo obrigatório
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Execução</mat-label>
+                  <mat-select formControlName="execucao">
+                    <mat-option [value]="null">Não informado</mat-option>
+                    <mat-option *ngFor="let e of execucaoOptions" [value]="e">{{ e }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Ações</mat-label>
+                  <mat-select formControlName="acoes">
+                    <mat-option [value]="null">Não informado</mat-option>
+                    <mat-option *ngFor="let a of acaoOptions" [value]="a">{{ a }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="grid-3">
+                <!--BOPM obrigatório + duplicidade -->
+                <mat-form-field appearance="outline" class="bop-field">
+                  <mat-label>BOPM</mat-label>
+                  <input
+                    #bopmEl
+                    matInput
+                    formControlName="bopm"
+                    autocomplete="off"
+                    placeholder="Ex: 1234/26"
+                    (input)="onBopmInput()"
+                    (keydown)="onBopKeydown($event)"
+                  />
+
+                  <mat-error *ngIf="form.controls.bopm.hasError('duplicateBopm')">
+                    Já existe uma produtividade com este BOPM nesta data.
+                  </mat-error>
+
+                  <mat-error
+                    *ngIf="
+                      !form.controls.bopm.hasError('duplicateBopm') &&
+                      form.controls.bopm.touched &&
+                      form.controls.bopm.hasError('required')
+                    "
+                  >
+                    BOPM é obrigatório
+                  </mat-error>
+                </mat-form-field>
+
+                <!--BOPC: aceita letras/números -->
+                <mat-form-field appearance="outline" class="bop-field">
+                  <mat-label>BOPC</mat-label>
+                  <input
+                    #bopcEl
+                    matInput
+                    formControlName="bopc"
+                    autocomplete="off"
+                    placeholder="Ex: 1234/26 ou ABC123/26"
+                    (input)="onBopcInput()"
+                  />
+                  <mat-hint>Aceita letras e números.</mat-hint>
+                </mat-form-field>
+
+                <div class="op-box">
+                  <div class="op-top">
+                    <mat-slide-toggle [formControl]="vincularOperacaoCtrl">
+                      Vincular a uma operação
+                    </mat-slide-toggle>
+                  </div>
+
+                  <div class="op-content" [class.disabled]="!vincularOperacaoCtrl.value">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Operação</mat-label>
+
+                      <input
+                        matInput
+                        [formControl]="operationSearchCtrl"
+                        [matAutocomplete]="autoOp"
+                        placeholder="Digite para buscar..."
+                      />
+
+                      <mat-autocomplete
+                        #autoOp="matAutocomplete"
+                        (optionSelected)="onPickOperacao($event.option.value)"
+                      >
+                        <mat-option *ngFor="let op of operationSuggestions()" [value]="op">
+                          {{ op.nome }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                      <mat-hint *ngIf="vincularOperacaoCtrl.value">
+                        Se marcou “Vincular”, selecione uma operação.
+                      </mat-hint>
+
+                      <mat-error *ngIf="form.controls.operacaoId.hasError('required')">
+                        Se marcou “Vincular”, selecione uma operação.
+                      </mat-error>
+                    </mat-form-field>
+
+                    <div class="op-pill" *ngIf="selectedOperation() as sop">
+                      <mat-icon>done</mat-icon>
+                      <span>{{ sop.nome }}</span>
+                      <button
+                        mat-icon-button
+                        type="button"
+                        (click)="clearOperacao()"
+                        aria-label="Remover operação"
+                        title="Remover"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SÍNTESE -->
+              <div class="section-card field-gap-top">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">Síntese</div>
+                    <div class="section-subtitle">
+                      Texto final/relato para o registro (ex.: resumo da ocorrência).
+                    </div>
+                  </div>
+
+                  <div class="header-actions">
+                    <button mat-stroked-button type="button" [matMenuTriggerFor]="modelosMenu">
+                      <mat-icon>article</mat-icon>
+                      Inserir modelo
+                    </button>
+
+                    <button mat-stroked-button type="button" (click)="clearSintese()">
+                      <mat-icon>delete_sweep</mat-icon>
+                      Limpar
+                    </button>
+
+                    <mat-menu #modelosMenu="matMenu">
+                      <button mat-menu-item type="button" (click)="applySinteseTemplate('procurado')">
+                        <mat-icon>person_search</mat-icon>
+                        <span>Procurado</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </div>
+
+                <mat-form-field appearance="outline" class="w-100 field-gap-top">
+                  <mat-label>Síntese</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="sintese"
+                    rows="12"
+                    placeholder="Digite a síntese aqui..."
+                  ></textarea>
+                </mat-form-field>
+
+                <div class="footer-actions">
+                  <button mat-stroked-button type="button" (click)="cancel()">
+                    <mat-icon>arrow_back</mat-icon>
+                    Voltar
+                  </button>
+
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    type="button"
+                    [disabled]="saving()"
+                    (click)="save()"
+                  >
+                    <mat-icon>save</mat-icon>
+                    {{ saving() ? 'Salvando...' : 'Salvar' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- ABA 2: QUALIFICAÇÃO -->
+          <mat-tab label="Qualificação">
+            <div class="tab-pad">
+              <div class="section-head">
+                <div>
+                  <mat-icon>person</mat-icon>
+                  <div class="section-title">Qualificação</div>
+                </div>
+
+                <button mat-stroked-button type="button" (click)="addQualificacao()">
+                  <mat-icon>add</mat-icon>
+                  Adicionar envolvido
+                </button>
+              </div>
+
+              <mat-tab-group
+                #qualTabs
+                class="sub-tabs"
+                [(selectedIndex)]="qualTabIndex"
+                dynamicHeight
+              >
+                <mat-tab
+                  *ngFor="let q of qualificacoesFA.controls; let i = index; trackBy: trackByIndex"
+                  [label]="'Envolvido ' + (i + 1)"
+                >
+                  <div class="subtab-pad" [formGroup]="q">
+                    <div class="grid-3">
+                      <mat-form-field appearance="outline" class="span-2">
+                        <mat-label>Nome</mat-label>
+                        <input matInput formControlName="nome" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>RG</mat-label>
+                        <input matInput formControlName="rg" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="grid-3">
+                      <mat-form-field appearance="outline">
+                        <mat-label>CPF</mat-label>
+                        <input
+                          matInput
+                          formControlName="cpf"
+                          (input)="onCpfInput(i)"
+                          placeholder="000.000.000-00"
+                        />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="span-2">
+                        <mat-label>Endereço</mat-label>
+                        <input matInput formControlName="endereco" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="grid-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Artigo</mat-label>
+                        <input matInput formControlName="artigo" placeholder="Ex: 155" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Sindicado</mat-label>
+                        <mat-select formControlName="sindicado">
+                          <mat-option [value]="null">Não informado</mat-option>
+                          <mat-option *ngFor="let opt of simNaoOptions" [value]="opt">
+                            {{ opt }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Facção</mat-label>
+                        <mat-select formControlName="faccao">
+                          <mat-option [value]="null">Não informado</mat-option>
+                          <mat-option *ngFor="let f of faccaoOptions" [value]="f">{{ f }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Banco</mat-label>
+                        <mat-select formControlName="banco">
+                          <mat-option [value]="null">Não informado</mat-option>
+                          <mat-option *ngFor="let opt of simNaoOptions" [value]="opt">
+                            {{ opt }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="row-actions">
+                      <button
+                        mat-stroked-button
+                        color="warn"
+                        type="button"
+                        (click)="removeQualificacao(i)"
+                        [disabled]="qualificacoesFA.length <= 1"
+                      >
+                        <mat-icon>delete</mat-icon>
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </mat-tab>
+
+          <!-- ABA 3: ARMAS -->
+          <mat-tab label="Armas">
+            <div class="tab-pad">
+              <div class="section-head">
+                <div>
+                  <div class="section-title">Apreensão de Armas</div>
+                  <div class="section-subtitle">Registre armas apreendidas (abas dinâmicas).</div>
+                </div>
+
+                <button mat-stroked-button type="button" (click)="addArma()">
+                  <mat-icon>add</mat-icon>
+                  Adicionar arma
+                </button>
+              </div>
+
+              <mat-tab-group
+                class="sub-tabs"
+                [(selectedIndex)]="armaTabIndex"
+                animationDuration="150ms"
+                dynamicHeight
+              >
+                <mat-tab
+                  *ngFor="let a of armasFA.controls; let i = index; trackBy: trackByIndex"
+                  [label]="'Arma ' + (i + 1)"
+                >
+                  <div class="subtab-pad" [formGroup]="a">
+                    <div class="grid-2">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select formControlName="tipo">
+                          <mat-option [value]="null">Não informado</mat-option>
+                          <mat-option *ngFor="let t of armaTipoOptions" [value]="t">{{ t }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Marca</mat-label>
+                        <mat-select formControlName="marca">
+                          <mat-option [value]="null">Não informado</mat-option>
+                          <mat-option *ngFor="let m of armaMarcaOptions" [value]="m">{{ m }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="grid-2">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Modelo</mat-label>
+                        <input matInput formControlName="modelo" placeholder="Ex: G2C" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Qtde munições</mat-label>
+                        <input matInput type="number" formControlName="qtdeMunicoes" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="row-actions">
+                      <button
+                        mat-stroked-button
+                        color="warn"
+                        type="button"
+                        (click)="removeArma(i)"
+                        [disabled]="armasFA.length <= 1"
+                      >
+                        <mat-icon>delete</mat-icon>
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </mat-tab>
+
+          <!-- ABA 4: CELULARES -->
+          <mat-tab label="Celulares">
+            <div class="tab-pad">
+              <div class="section-head">
+                <div>
+                  <div class="section-title">Celulares</div>
+                  <div class="section-subtitle">Registre aparelhos apreendidos (abas dinâmicas).</div>
+                </div>
+
+                <button mat-stroked-button type="button" (click)="addCelular()">
+                  <mat-icon>add</mat-icon>
+                  Adicionar celular
+                </button>
+              </div>
+
+              <mat-tab-group
+                class="sub-tabs"
+                [(selectedIndex)]="celTabIndex"
+                animationDuration="150ms"
+                dynamicHeight
+              >
+                <mat-tab
+                  *ngFor="let c of celularesFA.controls; let i = index; trackBy: trackByIndex"
+                  [label]="'Celular ' + (i + 1)"
+                >
+                  <div class="subtab-pad" [formGroup]="c">
+                    <div class="grid-2">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Marca</mat-label>
+                        <mat-select formControlName="marca">
+                          <mat-option [value]="null">Não informado</mat-option>
+                          <mat-option *ngFor="let m of celularMarcaOptions" [value]="m">
+                            {{ m }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Modelo</mat-label>
+                        <input matInput formControlName="modelo" placeholder="Ex: A54" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="row-actions">
+                      <button
+                        mat-stroked-button
+                        color="warn"
+                        type="button"
+                        (click)="removeCelular(i)"
+                        [disabled]="celularesFA.length <= 1"
+                      >
+                        <mat-icon>delete</mat-icon>
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </mat-tab>
+
+          <!-- ABA 5: APREENSÕES -->
+          <mat-tab label="Apreensões">
+            <div class="tab-pad">
+              <div class="section-title">Apreensões</div>
+              <div class="section-subtitle">Drogas, explosivos, veículos e demais itens.</div>
+
+              <div class="section-card">
+                <div class="block-title">
+                  <mat-icon>science</mat-icon>
+                  Drogas / Itens (peso)
+                </div>
+
+                <div class="grid-4" formGroupName="drogas">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Maconha</mat-label>
+                    <input matInput formControlName="maconha" (input)="onPesoInput('drogas.maconha')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cocaína</mat-label>
+                    <input matInput formControlName="cocaina" (input)="onPesoInput('drogas.cocaina')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Crack</mat-label>
+                    <input matInput formControlName="crack" (input)="onPesoInput('drogas.crack')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Haxixe</mat-label>
+                    <input matInput formControlName="haxixe" (input)="onPesoInput('drogas.haxixe')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Skank</mat-label>
+                    <input matInput formControlName="skank" (input)="onPesoInput('drogas.skank')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Lança perfume</mat-label>
+                    <input matInput formControlName="lancaPerfume" (input)="onPesoInput('drogas.lancaPerfume')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>LSD</mat-label>
+                    <input matInput formControlName="lsd" (input)="onPesoInput('drogas.lsd')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Ecstasy</mat-label>
+                    <input matInput formControlName="ecstasy" (input)="onPesoInput('drogas.ecstasy')" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cigarro</mat-label>
+                    <input matInput formControlName="cigarro" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Outras drogas</mat-label>
+                    <input matInput formControlName="outrasDrogas" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Explosivos</mat-label>
+                    <input matInput formControlName="explosivos" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Pé de maconha</mat-label>
+                    <input matInput formControlName="peDeMaconha" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="section-card">
+                <div class="block-title">
+                  <mat-icon>directions_car</mat-icon>
+                  Veículos / Bens
+                </div>
+
+                <div class="grid-4" formGroupName="veiculos">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Carro</mat-label>
+                    <input matInput formControlName="carro" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Moto</mat-label>
+                    <input matInput formControlName="moto" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Caminhão</mat-label>
+                    <input matInput formControlName="caminhao" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Camionete</mat-label>
+                    <input matInput formControlName="camionete" />
+                  </mat-form-field>
+                </div>
+
+                <div class="grid-2">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Valores</mat-label>
+                    <input
+                      matInput
+                      formControlName="valores"
+                      placeholder="Ex: R$ 2.500,00"
+                      (input)="onMoneyInput()"
+                    />
+                    <mat-hint>Formato: R$ 0,00</mat-hint>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Outros</mat-label>
+                    <input matInput formControlName="outros" placeholder="Demais itens apreendidos..." />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </form>
+    </div>
+  </mat-card>
+</div>

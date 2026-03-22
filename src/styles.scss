@@ -1,0 +1,274 @@
+/* ===== Angular Material Theming — Nova API (v18) ===== */
+@use '@angular/material' as mat;
+
+@include mat.core();
+@import 'styles/form-field-modern';
+
+
+/* Tema claro baseado nas cores PMESP */
+$pmesp-light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$blue-palette,
+    tertiary: mat.$blue-palette
+  ),
+  density: (scale: 0)
+));
+
+/* Tema escuro (ativar com body.dark-theme) */
+$pmesp-dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$blue-palette,
+    tertiary: mat.$blue-palette
+  ),
+  density: (scale: 0)
+));
+
+:root { @include mat.all-component-themes($pmesp-light-theme); }
+.dark-theme { @include mat.all-component-colors($pmesp-dark-theme); }
+
+/* ===== Cores e variáveis visuais ===== */
+:root {
+  --azul-topo: #1e3a8a;
+  --azul-topo-grad: #2563eb;
+  --texto-topo: #ffffff;
+
+  --menu-bg: #f9fafb;
+  --menu-active: #e0e7ff;
+  --menu-icon: #1d4ed8;
+
+  --bg: #f8fafc;
+  --texto: #111827;
+  --texto-secundario: #6b7280;
+  --card: #ffffff;
+  --borda: #e5e7eb;
+}
+
+/* ===== Base ===== */
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--texto);
+}
+
+/* ===== Toolbar ===== (não mexe no tamanho do seu logo) */
+.app-toolbar {
+  background: linear-gradient(90deg, var(--azul-topo), var(--azul-topo-grad)) !important;
+  color: var(--texto-topo) !important;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.app-toolbar .mat-icon { color: var(--texto-topo) !important; }
+.fill { flex: 1; }
+
+/* ===== MENU LATERAL ===== */
+mat-sidenav {
+  width: 240px;
+  background: var(--menu-bg);
+  border-right: 1px solid var(--borda);
+  display: flex;
+  flex-direction: column;
+  /* --- fixes de corte/altura sem tocar no logo/toolbar --- */
+  height: 100%;
+  max-height: 100%;
+  overflow: auto;
+}
+
+mat-nav-list { padding-top: 8px; }
+mat-nav-list a {
+  font-weight: 500;
+  color: #111827;
+  margin: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  padding: 10px 12px;
+}
+mat-nav-list a.active,
+mat-nav-list a:hover {
+  background: var(--menu-active);
+  color: var(--menu-icon);
+}
+mat-nav-list mat-icon {
+  color: var(--menu-icon);
+  margin-right: 8px;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  padding: 24px;
+  margin: 0 auto;
+  max-width: 1440px;
+}
+
+/* ===== DASHBOARD ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.kpi-card .value { font-size: 28px; font-weight: 700; }
+.kpi-card .subtitle { color: var(--texto-secundario); }
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  margin-top: 16px;
+}
+
+.pbi-card { min-height: 320px; }
+.pbi-card.wide { grid-column: 1 / -1; min-height: 420px; }
+
+.placeholder {
+  height: 260px;
+  border: 2px dashed #cfd8dc;
+  border-radius: 10px;
+  background: #fafbfc;
+  color: #607d8b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+.placeholder mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.7;
+}
+
+/* ===== LOGIN ===== */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--azul-topo), var(--azul-topo-grad));
+}
+.login-card {
+  width: 380px;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--azul-topo);
+}
+.login-card .mat-form-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.login-card button {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--azul-topo);
+  color: #fff;
+}
+.login-card button:hover {
+  background: var(--azul-topo-grad);
+}
+
+/* ===== RESPONSIVO ===== */
+.hide-desktop { display: none; }
+@media (max-width: 960px) {
+  .hide-desktop { display: inline-flex; }
+}
+
+/* =============================================================================
+   FIXES ESPECÍFICOS (sem alterar o logo/toolbar)
+   ========================================================================== */
+
+/* 1) garante que o container abaixo da toolbar tenha a altura certa */
+.shell { height: calc(100vh - 64px); }
+
+/* 2) quando o sidenav (mode="over") abre, escurece o conteúdo atrás */
+:root:has(mat-sidenav[opened]) mat-sidenav-content::after {
+  content: '';
+  position: fixed;
+  inset: 64px 0 0 0;         /* abaixo da toolbar de 64px */
+  background: rgba(15, 23, 42, .35);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 3) impede qualquer corte do sidenav por contêineres de página */
+mat-sidenav-content { min-height: 100%; overflow: hidden; }
+
+/* ===== SUBMENU GLOBAL - OPERAÇÕES ===== */
+
+.menu-operacoes-trigger {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  text-align: left;
+}
+
+.menu-operacoes-trigger:hover,
+.menu-operacoes-trigger:focus,
+.menu-operacoes-trigger:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.menu-operacoes-spacer {
+  flex: 1;
+}
+
+.menu-operacoes-arrow {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+/* painel do mat-menu */
+.cdk-overlay-pane .operacoes-overlay-panel {
+  min-width: 230px !important;
+  border: 1px solid var(--borda) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16) !important;
+  overflow: hidden !important;
+  margin-left: 10px;
+}
+
+.operacoes-overlay-panel .mat-mdc-menu-content {
+  padding: 6px !important;
+}
+
+.operacoes-overlay-panel .mat-mdc-menu-item {
+  min-height: 44px !important;
+  border-radius: 8px !important;
+}
+
+.operacoes-overlay-panel .mat-mdc-menu-item:hover {
+  background: var(--menu-active) !important;
+}
+
+.operacoes-overlay-panel .mat-icon {
+  color: var(--menu-icon) !important;
+  margin-right: 8px !important;
+}
+
+

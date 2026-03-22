@@ -1,0 +1,354 @@
+<div class="page-wrapper">
+  <div class="card-panel">
+
+    <div class="header">
+
+      <button
+        type="button"
+        mat-icon-button
+        class="btn-back"
+        (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div class="title-area">
+        <mat-icon>supervisor_account</mat-icon>
+        <div class="texts">
+          <h2>Usuários</h2>
+          <p>Lista completa de contas e permissões.</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <mat-icon>search</mat-icon>
+          <input
+            type="text"
+            placeholder="Buscar por nome, usuário, perfil ou área..."
+            [(ngModel)]="search"
+            (keyup.enter)="reloadFirstPage()" />
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            (click)="reloadFirstPage()">
+            Buscar
+          </button>
+        </div>
+
+        <button
+          *ngIf="isGestor()"
+          mat-flat-button
+          color="primary"
+          class="btn-new"
+          routerLink="/usuarios/novo">
+          <mat-icon>add</mat-icon>
+          Novo usuário
+        </button>
+      </div>
+    </div>
+
+    <mat-progress-bar
+      *ngIf="loading()"
+      mode="indeterminate">
+    </mat-progress-bar>
+
+    <div class="table-container" *ngIf="users().length > 0; else emptyState">
+
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th style="width: 70px;">ID</th>
+            <th>Nome completo</th>
+            <th>Usuário</th>
+            <th style="width: 170px;">Perfil</th>
+            <th style="width: 140px;">Área</th>
+            <th style="width: 110px;">Status</th>
+            <th style="width: 190px;" class="actions-header">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let u of users()">
+            <td>{{ u.id }}</td>
+            <td>{{ u.fullName }}</td>
+            <td>{{ u.username }}</td>
+
+            <td>
+              <span class="role-chip" [ngClass]="roleClass(u.role)">
+                {{ roleLabel(u.role) }}
+              </span>
+            </td>
+
+            <td>
+              <span class="role-chip area-chip">
+                {{ areaLabel(u.areaAcesso) }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="status-chip"
+                [class.disabled]="u.enabled === false">
+                {{ u.enabled === false ? 'Inativo' : 'Ativo' }}
+              </span>
+            </td>
+
+            <td>
+              <div class="actions">
+                <button
+                  mat-icon-button
+                  class="btn-icon btn-view"
+                  matTooltip="Visualizar dados"
+                  (click)="openViewModal(u)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+
+                <button
+                  *ngIf="isGestor()"
+                  mat-icon-button
+                  class="btn-icon btn-password"
+                  matTooltip="Redefinir senha"
+                  (click)="openPasswordModal(u)">
+                  <mat-icon>lock_reset</mat-icon>
+                </button>
+
+                <button
+                  *ngIf="isGestor()"
+                  mat-icon-button
+                  class="btn-icon btn-delete"
+                  matTooltip="Excluir usuário"
+                  (click)="deleteUser(u)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <mat-icon>people_outline</mat-icon>
+        <h3>Nenhum usuário encontrado</h3>
+        <p>Use o botão "Novo usuário" para cadastrar o primeiro acesso.</p>
+      </div>
+    </ng-template>
+
+    <div class="footer" *ngIf="users().length > 0">
+      <span>
+        Página {{ page() + 1 }} • Total: {{ total() }}
+      </span>
+
+      <div class="page-size">
+        <span>Itens por página:</span>
+        <a (click)="changePageSize(10)">10</a>
+        <a (click)="changePageSize(25)">25</a>
+        <a (click)="changePageSize(50)">50</a>
+      </div>
+
+      <div class="nav">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="goPrev()"
+          [disabled]="page() === 0">
+          Anterior
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="goNext()">
+          Próxima
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL VISUALIZAR -->
+    <div
+      class="password-modal-backdrop"
+      *ngIf="viewingUser() as userViewing">
+
+      <div class="password-modal view-modal">
+
+        <div class="modal-header">
+          <div>
+            <h4>Dados do usuário</h4>
+            <p>
+              Usuário:
+              <strong>{{ userViewing.username }}</strong>
+            </p>
+          </div>
+
+          <button
+            mat-icon-button
+            type="button"
+            (click)="closeViewModal()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="view-summary">
+          <div class="summary-avatar">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+
+          <div class="summary-main">
+            <div class="summary-name">{{ userViewing.fullName || '—' }}</div>
+            <div class="summary-username">&#64;{{ userViewing.username || '—' }}</div>
+          </div>
+
+          <div class="summary-badges">
+            <span class="role-chip" [ngClass]="roleClass(userViewing.role)">
+              {{ roleLabel(userViewing.role) }}
+            </span>
+
+            <span class="role-chip area-chip">
+              {{ areaLabel(userViewing.areaAcesso) }}
+            </span>
+
+            <span
+              class="status-chip"
+              [class.disabled]="userViewing.enabled === false">
+              {{ userViewing.enabled === false ? 'Inativo' : 'Ativo' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="user-details-grid">
+          <div class="detail-card">
+            <span class="detail-label">Nome completo</span>
+            <strong class="detail-value">{{ userViewing.fullName || '—' }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Usuário</span>
+            <strong class="detail-value">{{ userViewing.username || '—' }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Email</span>
+            <strong class="detail-value">{{ userViewing.email || '—' }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Telefone</span>
+            <strong class="detail-value">{{ userViewing.telefone || '—' }}</strong>
+          </div>
+
+          <div class="detail-card detail-card-full">
+            <span class="detail-label">Endereço</span>
+            <strong class="detail-value">{{ userViewing.endereco || '—' }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Data de nascimento</span>
+            <strong class="detail-value">{{ formatDateBR(userViewing.dataNascimento) }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Perfil</span>
+            <strong class="detail-value">{{ roleLabel(userViewing.role) }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Área</span>
+            <strong class="detail-value">{{ areaLabel(userViewing.areaAcesso) }}</strong>
+          </div>
+
+          <div class="detail-card">
+            <span class="detail-label">Status</span>
+            <strong class="detail-value">
+              {{ userViewing.enabled === false ? 'Inativo' : 'Ativo' }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="closeViewModal()">
+            Fechar
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODAL SENHA -->
+    <div
+      class="password-modal-backdrop"
+      *ngIf="editingUser() as userEditing">
+
+      <div class="password-modal">
+
+        <div class="modal-header">
+          <div>
+            <h4>Redefinir senha</h4>
+            <p>
+              Usuário:
+              <strong>{{ userEditing.username }}</strong>
+            </p>
+          </div>
+
+          <button
+            mat-icon-button
+            type="button"
+            (click)="closePasswordModal()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
+          <mat-form-field
+            appearance="outline"
+            class="full-width">
+            <mat-label>Nova senha *</mat-label>
+            <input
+              matInput
+              [type]="hideResetPassword() ? 'password' : 'text'"
+              formControlName="password" />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hideResetPassword.set(!hideResetPassword())">
+              <mat-icon>
+                {{ hideResetPassword() ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
+            </button>
+            <mat-error *ngIf="pf['password'].touched && pf['password'].hasError('required')">
+              Informe a nova senha
+            </mat-error>
+            <mat-error *ngIf="pf['password'].touched && pf['password'].hasError('minlength')">
+              Mínimo de 6 caracteres
+            </mat-error>
+          </mat-form-field>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              mat-stroked-button
+              (click)="closePasswordModal()">
+              Cancelar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              color="primary"
+              [disabled]="passwordForm.invalid || savingPassword()">
+              <mat-icon>save</mat-icon>
+              {{ savingPassword() ? 'Salvando...' : 'Salvar senha' }}
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>

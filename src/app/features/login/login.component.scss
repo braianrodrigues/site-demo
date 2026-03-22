@@ -1,0 +1,102 @@
+/* =========================
+   Fundo institucional
+   ========================= */
+.login-hero {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0b3b75, #1e40af, #2563eb);
+  background-size: 200% 200%;
+  animation: bgMove 10s ease infinite;
+  z-index: 0;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =========================
+   Overlay sutil
+   ========================= */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   Container principal
+   ========================= */
+.login-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* =========================
+   Cartão de login
+   ========================= */
+.login-card {
+  width: 380px;
+  padding: 32px 28px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+
+/* =========================
+   Logo e título
+   ========================= */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.logo img {
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+}
+.logo h2 {
+  margin: 0;
+  color: #0b3b75;
+  font-size: 20px;
+  font-weight: 700;
+}
+.logo small {
+  color: #64748b;
+}
+
+/* =========================
+   Inputs e botão
+   ========================= */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 14px;
+}
+button.w100 {
+  width: 100%;
+  margin-top: 10px;
+  font-weight: 600;
+  background: #0b3b75 !important;
+}
+button.w100:hover {
+  background: #1e40af !important;
+}
+
+/* =========================
+   Mensagem de erro
+   ========================= */
+.error-msg {
+  margin-top: 10px;
+  color: #b91c1c;
+  font-weight: 500;
+  font-size: 14px;
+}

@@ -1,0 +1,23 @@
+<div class="toast-host">
+  <div
+    class="toast"
+    *ngFor="let t of ts.toasts(); trackBy: trackById"
+    [ngClass]="{
+      success: t.kind === 'success',
+      error:   t.kind === 'error',
+      info:    t.kind === 'info',
+      warning: t.kind === 'warning'
+    }"
+    role="status"
+    aria-live="polite"
+  >
+    <span class="icon">{{ icon(t.kind) }}</span>
+
+    <div class="content">
+      <div class="title" *ngIf="t.title">{{ t.title }}</div>
+      <div class="msg">{{ t.message }}</div>
+    </div>
+
+    <button class="close" (click)="dismiss(t.id)" aria-label="Fechar">×</button>
+  </div>
+</div>

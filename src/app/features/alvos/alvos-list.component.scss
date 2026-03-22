@@ -1,0 +1,516 @@
+/* src/app/features/alvos/alvos-list.component.scss */
+
+/* ============================================================
+   LAYOUT GERAL
+   ============================================================ */
+.page-wrapper {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  background: #f3f6ff;
+}
+
+.card-panel {
+  width: 100%;
+  max-width: 1700px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 20px 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title-area mat-icon {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0067ff, #00c853);
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-area h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #020617;
+}
+
+.title-area p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #6b7280;
+}
+
+/* BOTÃO NOVO */
+.btn-new {
+  border-radius: 999px !important;
+  padding: 8px 22px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  background: linear-gradient(135deg, #0067ff, #00b4ff) !important;
+  color: #ffffff !important;
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.55) !important;
+  letter-spacing: 0.01em;
+
+  mat-icon {
+    margin-right: 6px;
+  }
+}
+
+/* ============================================================
+   TABELA
+   ============================================================ */
+
+.table-container {
+  margin-top: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(209, 213, 219, 0.9);
+  overflow: visible;
+  width: 100%;
+}
+
+.alvos-table {
+  width: 100%;
+  overflow: visible;
+}
+
+/* Cabeçalho */
+.alvos-table .mat-mdc-header-cell {
+  background: #0067ff;
+  color: #ffffff;
+  padding: 6px 10px 8px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Células */
+.alvos-table .mat-mdc-cell {
+  font-size: 0.9rem;
+  color: #111827;
+  padding: 10px 12px;
+}
+
+/* Zebra */
+.alvos-table .mat-mdc-row:nth-child(even) .mat-mdc-cell {
+  background: #f3f6ff;
+}
+
+.alvos-table .mat-mdc-row:nth-child(odd) .mat-mdc-cell {
+  background: #ffffff;
+}
+
+.alvos-table .mat-mdc-row:hover .mat-mdc-cell {
+  background: #e5f0ff;
+}
+
+/* ============================================================
+   FILTROS
+   ============================================================ */
+
+.header-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-title {
+  font-size: 0.8rem;
+}
+
+.header-filter {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  padding: 2px 6px;
+  font-size: 0.78rem;
+  background: #eef2ff;
+  color: #0f172a;
+  height: 24px;
+}
+
+.foto-header-cell {
+  align-items: center;
+}
+
+/* ============================================================
+   LARGURA DAS COLUNAS
+   ============================================================ */
+
+.alvos-table .mat-mdc-cell:nth-child(1),
+.alvos-table .mat-mdc-header-cell:nth-child(1) {
+  width: 70px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(2),
+.alvos-table .mat-mdc-header-cell:nth-child(2) {
+  width: 90px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(3),
+.alvos-table .mat-mdc-header-cell:nth-child(3) {
+  width: 260px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(4),
+.alvos-table .mat-mdc-header-cell:nth-child(4) {
+  width: 180px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(5),
+.alvos-table .mat-mdc-header-cell:nth-child(5) {
+  width: 180px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(6),
+.alvos-table .mat-mdc-header-cell:nth-child(6) {
+  width: 180px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(7),
+.alvos-table .mat-mdc-header-cell:nth-child(7) {
+  width: 80px;
+}
+
+.alvos-table .mat-mdc-cell:nth-child(8),
+.alvos-table .mat-mdc-header-cell:nth-child(8) {
+  width: 150px;
+}
+
+/* ============================================================
+   ALINHAMENTO
+   ============================================================ */
+
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(1),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(2),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(4),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(5),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(6),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(7),
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(8) {
+  text-align: center !important;
+}
+
+.alvos-table .mat-mdc-row .mat-mdc-cell:nth-child(3) {
+  text-align: left !important;
+  padding-left: 14px;
+  white-space: normal;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+/* ============================================================
+   BORDAS
+   ============================================================ */
+
+.alvos-table .mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid #e5e7eb;
+  overflow: visible;
+}
+
+.alvos-table .mat-mdc-cell,
+.alvos-table .mat-mdc-header-cell {
+  border-right: 1px solid #e5e7eb;
+}
+
+.alvos-table .mat-mdc-cell:last-child,
+.alvos-table .mat-mdc-header-cell:last-child {
+  border-right: none;
+}
+
+.alvos-table .mat-mdc-header-row .mat-mdc-header-cell {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ============================================================
+   FOTO MINIATURA + PREVIEW
+   ============================================================ */
+
+.foto-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible !important;
+}
+
+.foto-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* ============================================================
+   miniatura 
+   ============================================================ */
+.alvo-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* ============================================================
+   preview ampliado
+   ============================================================ */
+.foto-preview {
+  position: absolute;
+  left: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  background: #ffffff;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+
+  z-index: 9999;
+  transition: opacity 0.18s ease;
+}
+
+.foto-preview img {
+  width: 160px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+/* ============================================================
+   hover
+   ============================================================ */
+.foto-wrapper:hover .alvo-thumb {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+}
+
+.foto-wrapper:hover .foto-preview {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================
+   placeholder
+   ============================================================ */
+.alvo-thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  color: #64748b;
+}
+
+.alvo-thumb-placeholder mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================================
+   AÇÕES
+   ============================================================ */
+
+.actions-header {
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn-icon mat-icon {
+  font-size: 18px;
+}
+
+.btn-view {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.btn-view mat-icon {
+  color: #1e40af;
+}
+
+.btn-view:hover {
+  background: rgba(37, 99, 235, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.btn-edit {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.btn-edit mat-icon {
+  color: #1d4ed8;
+}
+
+.btn-edit:hover {
+  background: rgba(37, 99, 235, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-delete mat-icon {
+  color: #dc2626;
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.footer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(209, 213, 219, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.page-size a {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #0067ff;
+  text-decoration: none;
+}
+
+.page-size a:hover {
+  text-decoration: underline;
+}
+
+.nav button {
+  margin-left: 8px;
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+
+@media (max-width: 1200px) {
+  .page-wrapper {
+    padding: 16px;
+  }
+
+  .card-panel {
+    max-width: 100%;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .alvos-table {
+    min-width: 1250px;
+  }
+}
+
+@media (max-width: 900px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .btn-new {
+    align-self: flex-start;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+.no-data-row td,
+.no-data-row td.mat-cell,
+.no-data-row .empty-row {
+  padding: 0 !important;
+  text-align: center !important;
+  border-right: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+}
+
+.empty-row-content {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f2937;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.alvos-table .no-data-row:hover td,
+.alvos-table .no-data-row:hover .mat-cell {
+  background: #ffffff !important;
+}
