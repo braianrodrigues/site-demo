@@ -1,27 +1,177 @@
-# Frontend
+# 🚀 Plataforma de Gestão Operacional (Demo)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+> 💡 Sistema web completo desenvolvido com Angular e backend em Java (Spring Boot), simulando um ambiente real de gestão operacional com controle de acesso por perfil, cadastro de dados e interface moderna.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 📌 Sobre o projeto
 
-## Code scaffolding
+A **Plataforma de Gestão Operacional** é uma aplicação web desenvolvida com foco em organização, controle e gerenciamento de informações operacionais.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+O sistema foi projetado com arquitetura modular, separando responsabilidades por domínio (Alvos, Produtividade, Usuários, Operações), seguindo boas práticas modernas de desenvolvimento.
 
-## Build
+🚧 **Status:** Em desenvolvimento contínuo  
+📦 **Tipo:** Projeto demonstrativo (demo)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 🚀 Diferenciais Técnicos
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Arquitetura modular baseada em features
+- Angular com Standalone Components (sem NgModules)
+- Controle de acesso por perfil (RBAC)
+- Integração com mapas (geolocalização)
+- Formulários dinâmicos com múltiplas abas
+- Estrutura preparada para logs e auditoria
+- Frontend desacoplado do backend (API REST)
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## ⚙️ Funcionalidades
 
-## Further help
+- 🔐 Autenticação com controle de acesso por perfil  
+- 📊 Dashboard com indicadores operacionais  
+- 🎯 Gestão de Alvos (cadastro completo)  
+- 📈 Cadastro e consulta de Produtividade  
+- 👥 Gerenciamento de Usuários  
+- 📂 Módulo de Operações  
+- 🗺️ Integração com mapas  
+- 📑 Base para relatórios e logs  
+- 🎨 Interface moderna com Angular Material  
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## 🧩 Casos de Uso
+
+Este sistema pode ser utilizado para:
+
+- Gestão operacional de equipes
+- Controle de produtividade
+- Monitoramento de dados estratégicos
+- Organização de operações
+- Apoio à tomada de decisão com dashboards
+
+---
+
+## 🧠 Tecnologias utilizadas
+
+### Frontend
+- Angular
+- TypeScript
+- Angular Material
+- RxJS
+- HTML5 + SCSS
+
+### Backend (arquitetura do projeto real)
+- Java
+- Spring Boot
+- Spring Security (JWT)
+- JPA / Hibernate
+- PostgreSQL
+
+---
+
+## 🏗️ Arquitetura
+
+### Frontend
+
+- core → autenticação, guards e serviços globais  
+- features → módulos do sistema  
+- shared → componentes reutilizáveis  
+
+### Backend
+
+- Controller → Service → Repository  
+- DTOs para comunicação  
+- API REST estruturada  
+- Segurança com JWT  
+
+---
+
+## 📸 Interface
+
+### 📊 Dashboard
+![Dashboard](./src/assets/interface-dashboard.png)
+
+### 📈 Produtividade
+![Produtividade](./src/assets/interface-produtividade.png)
+![Cadastro](./src/assets/interface-produtividade1.png)
+
+### 🎯 Alvos
+![Lista](./src/assets/interface-alvos.png)
+![Cadastro](./src/assets/interface-alvos1.png)
+![Mapa](./src/assets/interface-alvos2.png)
+
+### 👥 Usuários
+![Usuarios](./src/assets/interface-usuario.png)
+
+---
+
+## 🏗️ Estrutura do Projeto
+
+### Frontend
+![Estrutura](./src/assets/estrutura-frontend.png)
+
+### Backend
+![Estrutura](./src/assets/estrutura-backend.png)
+
+---
+
+## 🔄 Como executar
+
+### Pré-requisitos
+- Node.js 18+
+- Angular CLI
+
+### Passos
+
+```bash
+git clone https://github.com/braianrodrigues/site-demo.git
+cd site-demo
+npm install
+ng serve
+```
+
+Acesse:
+http://localhost:4200
+
+---
+
+## 🔐 Acesso (modo demo)
+
+Usuário: gestor  
+Senha: 123456  
+
+---
+
+## 📌 Roadmap
+
+- [x] Autenticação
+- [x] Gestão de Alvos
+- [x] Produtividade
+- [x] Usuários
+- [ ] Relatórios avançados
+- [ ] Auditoria completa
+
+
+---
+
+## 🔒 Observação
+
+Este repositório é uma versão demonstrativa.
+
+A versão completa inclui:
+
+- Backend completo em Spring Boot
+- Integração com banco de dados
+- Autenticação real via JWT
+- Regras de negócio completas
+
+Não disponibilizado por motivos de segurança.
+
+---
+
+## 👨‍💻 Autor
+
+Braian Rodrigues  
+Desenvolvedor Full Stack
