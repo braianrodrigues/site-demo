@@ -91,7 +91,7 @@ Este sistema pode ser utilizado para:
 ## 📸 Interface
 
 ### 📊 Dashboard
-![Dashboard](src/assets/interface-dashboard.png)
+<img src="src/assets/interface-dashboard.png" alt="Dashboard" width="900">
 
 ### 📈 Produtividade
 ![Produtividade](src/assets/interface-produtividade.png)
