@@ -110,10 +110,10 @@ Este sistema pode ser utilizado para:
 ## 🏗️ Estrutura do Projeto
 
 ### Frontend
-![Estrutura](./src/assets/estrutura-frontend.png)
+![Estrutura](src/assets/estrutura-frontend.png)
 
 ### Backend
-![Estrutura](./src/assets/estrutura-backend.png)
+![Estrutura](src/assets/estrutura-backend.png)
 
 ---
 
