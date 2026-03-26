@@ -91,29 +91,29 @@ Este sistema pode ser utilizado para:
 ## 📸 Interface
 
 ### 📊 Dashboard
-![Dashboard](./src/assets/interface-dashboard.png)
+![Dashboard](./src/assets/interface-dashboard-v2.png)
 
 ### 📈 Produtividade
-![Produtividade](./src/assets/interface-produtividade.png)
-![Cadastro](./src/assets/interface-produtividade1.png)
+![Produtividade](./src/assets/interface-produtividade-v2.png)
+![Cadastro](./src/assets/interface-produtividade1-v2.png)
 
 ### 🎯 Alvos
-![Lista](./src/assets/interface-alvos.png)
-![Cadastro](./src/assets/interface-alvos1.png)
-![Mapa](./src/assets/interface-alvos2.png)
+![Lista](./src/assets/interface-alvos-v2.png)
+![Cadastro](./src/assets/interface-alvos1-v2.png)
+![Mapa](./src/assets/interface-alvos2-v2.png)
 
 ### 👥 Usuários
-![Usuarios](./src/assets/interface-usuario.png)
+![Usuarios](./src/assets/interface-usuario-v2.png)
 
 ---
 
 ## 🏗️ Estrutura do Projeto
 
 ### Frontend
-![Estrutura](./src/assets/estrutura-frontend.png)
+![Estrutura](./src/assets/estrutura-frontend-v2.png)
 
 ### Backend
-![Estrutura](./src/assets/estrutura-backend.png)
+![Estrutura](./src/assets/estrutura-backend-v2.png)
 
 ---
 
